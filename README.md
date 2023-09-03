@@ -1,4 +1,7 @@
 Sprint 1: https://github.com/DenisEvgenev/messenger/tree/sprint_1
+Netlify ссылка с деплоем: https://dreamy-vacherin-aceb03.netlify.app/
+Сслыка на макет: https://www.figma.com/file/jF5fFFzgGOxQeB4CmKWTiE/Chat_external_link?node-id=0%3A1&mode=dev
+
 ## Установка
 
 - `npm install` — установка стабильной версии.

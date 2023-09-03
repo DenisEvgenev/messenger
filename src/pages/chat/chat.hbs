@@ -1,0 +1,9 @@
+<div class="container">
+    {{#> FormAuth}}
+        {{> Title title="На этой странице будет чат во втором спринте, а сейчас ниже можно покликать на ссылки, ведущие на страницы с ошибками и профилем"}}
+        {{> Button label="Ошибка 404" type="link" page="404" }}
+        {{> Button label="Ошибка 500" type="link" page="500" }}
+        {{> Button label="Профиль" type="link" page="profile" }}
+        {{> Button label="Войти" type="link" page="login" }}
+    {{/FormAuth}}
+</div>

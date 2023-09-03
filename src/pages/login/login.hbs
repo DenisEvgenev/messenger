@@ -1,0 +1,9 @@
+<div class="container">
+    {{#> FormAuth}}
+        {{> Title title="Вход" }}
+        {{> Input label="Логин" type="text" name="login" }}
+        {{> Input label="Пароль" type="text" name="password" }}
+        {{> Button label="Авторизоваться" type="primary" page="chat" }}
+        {{> Button label="Нет аккаунта?" type="link" page="sign-in" }}
+    {{/FormAuth}}
+</div>

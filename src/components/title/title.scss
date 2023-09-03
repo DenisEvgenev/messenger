@@ -1,0 +1,12 @@
+.title {
+  color: var(--text-color);
+  font-size: 20px;
+  line-height: 20px;
+  margin: 0 auto 40px;
+
+  &__main {
+    font-size: 40px;
+    line-height: 40px;
+    margin: 0 auto 20px;
+  }
+}

@@ -1,0 +1,26 @@
+.form-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  &__label {
+    color: var(--text-color);
+    font-size: 13px;
+    line-height: 13px;
+  }
+
+  &__input {
+    border: 0;
+    background-color: white;
+    text-align: end;
+    color: var(--text-secondary-color);
+    font-size: 13px;
+    line-height: 13px;
+    outline: none;
+
+    &-disabled {
+      pointer-events: none;
+    }
+  }
+}
