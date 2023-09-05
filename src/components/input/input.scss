@@ -1,0 +1,66 @@
+.input {
+  padding: 10px;
+
+  &__container {
+    display: flex;
+    height: 38px;
+    flex-direction: column;
+    align-content: flex-end;
+  }
+
+  &__label {
+    transform: translateY(-21px);
+    cursor: text;
+    color: var(--text-secondary-color);
+    font-size: 13px;
+    font-weight: 500;
+    user-select: none;
+    transition:
+      font-size 0.5s,
+      transform 0.5s;
+  }
+
+  &__element {
+    border: none;
+    padding: 0%;
+    border-bottom: 1px solid var(--main-color);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color);
+    padding-bottom: 7px;
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:not(:placeholder-shown) {
+      & + .input__label {
+        transform: translateY(-36px);
+        font-size: 9px;
+      }
+    }
+
+    &:focus {
+      & + .input__label {
+        transform: translateY(-36px);
+        font-size: 9px;
+      }
+    }
+  }
+
+  &__text-error {
+    transform: translateY(-7px);
+    color: var(--error-color);
+    font-size: 8px;
+    font-weight: 400;
+    display: none;
+  }
+
+  &__error &__text-error {
+    display: block;
+  }
+
+  &__error &__element {
+    color: var(--error-color);
+  }
+}
