@@ -1,0 +1,32 @@
+.main-panel-chat-middle__message {
+    padding: 11px;
+    background-color: var(--gray);
+    max-width: 398px;
+    border-radius: 0 10px 10px;
+    margin: 10px;
+    display: flex;
+
+    &-host {
+        background-color: var(--second-color);
+        border-radius: 10px 10px 0;
+        margin-left: auto;
+    }
+
+    &-text {
+        font-size: 12px;
+        line-height: 15px;
+        color: var(--text-color);
+    }
+
+    &-time {
+        font-size: 9px;
+        line-height: 9px;
+        color: var(--text-secondary-color);
+        margin-top: auto;
+        margin-left: 14px;
+    }
+
+    &-host .main-panel-chat-middle__message-time {
+        color: var(--main-color);
+    }
+}

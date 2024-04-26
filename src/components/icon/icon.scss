@@ -1,6 +1,16 @@
 .icon {
+  &_l {
+    width: 32px;
+    height: 32px;
+  }
+
   &__m {
     width: 28px;
     height: 28px;
+  }
+
+  &__xs {
+    width: 15px;
+    height: 15px;
   }
 }
