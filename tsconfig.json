@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-      "outDir": "dist",
-      "lib": ["DOM", "ESNext"],
-      "declaration": false,
-      "module": "commonjs",
-      "strictNullChecks": true,
-      "sourceMap": true,
-      "noImplicitAny": false,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "esModuleInterop": true,
-      "baseUrl": "src/",
-      "typeRoots": [
-        "node_modules/@types",
-      ],
-   },
-   "include": [
-     "src",
-     "custom.d.ts"
-   ]
-} 
+    "outDir": "dist",
+    "lib": ["DOM", "ESNext"],
+    "declaration": false,
+    "module": "commonjs",
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "baseUrl": "src/",
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src",
+    "custom.d.ts"
+  ]
+}
