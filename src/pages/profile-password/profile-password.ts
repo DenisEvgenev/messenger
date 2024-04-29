@@ -4,8 +4,8 @@ import {
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
 
-export default class ProfilePasswordPage extends Block {
-    constructor(props) {
+export default class ProfilePasswordPage extends Block<object> {
+    constructor(props: object) {
         const formGroups = [{
             type: 'password', label: 'Старый пароль', text: '12345678', name: 'oldPassword',
         }, {

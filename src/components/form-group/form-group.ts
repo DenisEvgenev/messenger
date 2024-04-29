@@ -1,10 +1,13 @@
 import Block from 'core/Block';
 
-export default class FormGroup extends Block {
-    constructor(props) {
-        super({ ...props });
-    }
-
+export type Group = {
+    classname?: string;
+    type: string;
+    label: string;
+    text: string;
+    name?: string;
+}
+export default class FormGroup extends Block<Group> {
     render() {
         return (`
             <div class="form-group">

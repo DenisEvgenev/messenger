@@ -4,8 +4,12 @@ import emptyPhoto from 'assets/empty.png';
 import Block from 'core/Block';
 import { UserMessageBlock } from './user-message-block';
 
-export default class LeftPanelChat extends Block {
-    constructor(props) {
+type Props = {
+    userMessagesComponentsKeys?: Array<string>;
+}
+
+export default class LeftPanelChat extends Block<Props> {
+    constructor(props: Props) {
         const userMessages = [
             {
                 userName: 'Андрей',
@@ -34,10 +38,11 @@ export default class LeftPanelChat extends Block {
             },
         ];
 
-        const userMessagesComponents = userMessages.reduce((acc, data) => {
+        const userMessagesComponents = userMessages.reduce((acc: Record<string, any>, data) => {
             const component = new UserMessageBlock(data);
+            const { id } = component;
 
-            acc[component.id] = component;
+            acc[id] = component;
             return acc;
         }, {});
 
@@ -54,7 +59,7 @@ export default class LeftPanelChat extends Block {
             type: 'link-chat',
             page: 'profile',
         });
-        const SearchLine = new Input({ type: 'search-line', label: '🔍 Поиск' });
+        const SearchLine = new Input({ type: 'text', label: '🔍 Поиск' });
 
         this.children = {
             ...this.children,
@@ -68,10 +73,9 @@ export default class LeftPanelChat extends Block {
             <div class="left-panel-chat">
                 {{{ ButtonProfile }}}
                 {{{ SearchLine }}}
-                ${this.props.userMessagesComponentsKeys
-                .map(
-                    (key: string) => `{{{ ${key} }}}`,
-                ).join('')
+                ${this.props.userMessagesComponentsKeys?.map(
+                (key: string) => `{{{ ${key} }}}`,
+            ).join('')
             }
             </div>
         `);

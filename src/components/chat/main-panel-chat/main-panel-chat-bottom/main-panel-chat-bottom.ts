@@ -5,7 +5,17 @@ import ArrowRightIcon from 'assets/arrow-right.svg';
 import { Input } from 'components/input';
 import { Button } from 'components/button';
 
-export default class MainPanelChatBottom extends Block {
+type Props = {
+    userName?: string;
+    avatar?: string;
+    lastMessage?: string;
+    isYourLastMessage?: boolean;
+    time?: string;
+    countUnreadedMessages?: number;
+    message?: string;
+}
+
+export default class MainPanelChatBottom extends Block<Props> {
     init() {
         const onSendMessageBind = this.onSendMessage.bind(this);
         const onChangeMessageBind = this.onChangeMessage.bind(this);
@@ -16,14 +26,16 @@ export default class MainPanelChatBottom extends Block {
             size: 'm',
         });
         const Message = new Input({
-            type: 'message',
+            type: 'text',
             label: 'Сообщение',
             onBlur: onChangeMessageBind,
         });
         const SendMessage = new Button({
             type: 'invisible',
             label: '',
-            onClick: onSendMessageBind,
+            events: {
+                click: onSendMessageBind,
+            },
             icon: ArrowRightIcon,
         });
 
@@ -36,7 +48,8 @@ export default class MainPanelChatBottom extends Block {
         };
     }
 
-    onChangeMessage({ target }) {
+    onChangeMessage(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (target.value) {
@@ -52,7 +65,7 @@ export default class MainPanelChatBottom extends Block {
     }
 
     onSendMessage() {
-        console.log('===== onSendMessage ====', this.props.message);
+        console.log('===== message ====', this.props.message);
     }
 
     render(): string {

@@ -2,7 +2,7 @@ import * as Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Pages from './pages';
 
-const pages = {
+const pages: Record<string, any> = {
     login: [Pages.LoginPage],
     'sign-in': [Pages.SignInPage],
     chat: [Pages.ChatPage],
@@ -32,7 +32,7 @@ export function navigate(page: string) {
     container.innerHTML = Handlebars.compile(Source)(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('login'));
+document.addEventListener('DOMContentLoaded', () => navigate('chat'));
 
 document.addEventListener('click', (e) => {
     if (e.target && e.target instanceof HTMLElement) {

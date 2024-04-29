@@ -1,10 +1,11 @@
 import Block from 'core/Block';
 
-export default class Icon extends Block {
-    constructor(props) {
-        super({ ...props });
-    }
+type Props = {
+    size: string;
+    src: string;
+}
 
+export default class Icon extends Block<Props> {
     render() {
         return (`
             <img src="{{src}}" class="icon icon__{{size}}" />

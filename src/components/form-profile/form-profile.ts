@@ -1,19 +1,27 @@
-import { Button } from 'components/button';
-import { FormGroup } from 'components/form-group';
+import { Button, FormGroup } from 'components';
+import { ButtonProps } from 'components/button/button';
+import { Group } from 'components/form-group/form-group';
 import Block from 'core/Block';
 
-export default class FormProfile extends Block {
-    constructor(props) {
+type Props = {
+    formGroups?: Array<Group>;
+    buttons?: Array<ButtonProps>;
+    formGroupComponentKeys?: Array<string>;
+    buttonComponentKeys?: Array<string>;
+}
+
+export default class FormProfile extends Block<Props> {
+    constructor(props: Props) {
         const { formGroups = [], buttons = [] } = props;
 
-        const formGroupComponents = formGroups.reduce((acc, data) => {
+        const formGroupComponents = formGroups.reduce((acc: Record<string, unknown>, data) => {
             const component = new FormGroup(data);
 
             acc[component.id] = component;
             return acc;
         }, {});
 
-        const buttonComponents = buttons.reduce((acc, data) => {
+        const buttonComponents = buttons.reduce((acc: Record<string, unknown>, data) => {
             const component = new Button(data);
 
             acc[component.id] = component;
@@ -33,8 +41,10 @@ export default class FormProfile extends Block {
         return (
             `
             <form class="form-profile">
-                ${this.props.formGroupComponentKeys.map((key: string) => `{{{ ${key} }}}`).join('')}
-                ${this.props.buttonComponentKeys.map((key: string) => `{{{ ${key} }}}`).join('')}
+                ${this.props.formGroupComponentKeys?.map(
+                (key: string) => `{{{ ${key} }}}`,
+            ).join('')}
+                ${this.props.buttonComponentKeys?.map((key: string) => `{{{ ${key} }}}`).join('')}
             </form>
             `
         );

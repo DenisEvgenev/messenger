@@ -2,8 +2,8 @@ import { FormProfile, LeftPanel, Photo } from 'components';
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
 
-export default class ProfilePage extends Block {
-    constructor(props) {
+export default class ProfilePage extends Block<object> {
+    constructor(props: object) {
         const formGroups = [{
             classname: 'form-group__input-disabled',
             type: 'name',

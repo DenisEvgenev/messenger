@@ -1,8 +1,8 @@
 import { Button, Title } from 'components';
 import Block from 'core/Block';
 
-export default class ServerErrorPage extends Block {
-    constructor(props) {
+export default class ServerErrorPage extends Block<object> {
+    constructor(props: object) {
         super({
             ...props,
             TitleMain: new Title({ title: '500', type: 'main' }),

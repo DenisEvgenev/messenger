@@ -1,17 +1,20 @@
-import { Title } from 'components/title';
+import { Input, Button, Title } from 'components';
 import { REGEXP_LOGIN, REGEXP_PASSWORD } from 'constants/constants';
 import Block from 'core/Block';
-import { Input } from 'components/input';
-import { Button } from 'components/button';
 
-class FormAuth extends Block {
+type Props = {
+    login?: string;
+    password?: string;
+}
+
+class FormAuth extends Block<Props> {
     init() {
         const onChangeLoginBind = this.onChangeLogin.bind(this);
         const onChangePasswordBind = this.onChangePassword.bind(this);
         const onLoginBind = this.onLogin.bind(this);
 
         const TitleLogin = new Title({ title: 'Вход' });
-        const InputLogin = new Input({ type: 'login', label: 'Логин', onBlur: onChangeLoginBind });
+        const InputLogin = new Input({ type: 'text', label: 'Логин', onBlur: onChangeLoginBind });
         const FormPassword = new Input({
             type: 'password',
             label: 'Пароль',
@@ -19,9 +22,11 @@ class FormAuth extends Block {
         });
         const ButtonLogin = new Button({
             label: 'Авторизироваться',
-            type: 'primary',
+            type: 'submit',
             disabled: true,
-            onClick: onLoginBind,
+            events: {
+                click: onLoginBind || (() => {}),
+            },
             page: 'chat',
         });
         const ButtonCreateAccount = new Button({
@@ -40,10 +45,11 @@ class FormAuth extends Block {
         };
     }
 
-    onChangeLogin({ target }) {
+    onChangeLogin(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
-        if (REGEXP_LOGIN.test(target.value)) {
+        if (REGEXP_LOGIN.test(inputValue)) {
             this.children.InputLogin.setProps({ error: false, errorText: null });
         } else {
             this.children.InputLogin.setProps({
@@ -55,10 +61,11 @@ class FormAuth extends Block {
         this.setProps({ login: inputValue });
     }
 
-    onChangePassword({ target }) {
+    onChangePassword(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
-        if (REGEXP_PASSWORD.test(target.value)) {
+        if (REGEXP_PASSWORD.test(inputValue)) {
             this.children.FormPassword.setProps({ error: false, errorText: null });
         } else {
             this.children.FormPassword.setProps({
@@ -72,13 +79,9 @@ class FormAuth extends Block {
     }
 
     onLogin() {
-        console.log('===== onLogin =====', {
-            ...this.props,
-        });
-
-        this.setProps({ disabled: false });
-        const isCorrectLogin = REGEXP_LOGIN.test(this.props.login);
-        const isCorrectPassword = REGEXP_PASSWORD.test(this.props.password);
+        const { login = '', password = '' } = this.props;
+        const isCorrectLogin = REGEXP_LOGIN.test(login);
+        const isCorrectPassword = REGEXP_PASSWORD.test(password);
 
         if (!isCorrectPassword) {
             this.children.FormPassword.setProps({
@@ -93,6 +96,8 @@ class FormAuth extends Block {
                 error: true,
                 errorText: 'Используйте только буквы, начиная с заглавной',
             });
+        } else {
+            this.children.InputLogin.setProps({ error: false, errorText: null });
         }
 
         if (isCorrectLogin && isCorrectPassword) {
@@ -100,17 +105,20 @@ class FormAuth extends Block {
         } else {
             this.children.ButtonLogin.setProps({ disabled: true });
         }
+        console.log('===== Параметры =====', {
+            ...this.props,
+        });
     }
 
     render() {
         return (`
-            <form class="login-form">
+            <div class="login-form">
                 {{{ TitleLogin }}}
                 {{{ InputLogin }}}
                 {{{ FormPassword }}}
                 {{{ ButtonLogin }}}
                 {{{ ButtonCreateAccount }}}
-            </form>
+            </div>
         `);
     }
 }

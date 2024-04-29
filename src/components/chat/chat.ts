@@ -3,7 +3,7 @@ import emptyPhoto from 'assets/empty.png';
 import { LeftPanelChat } from './left-panel-chat';
 import { MainPanelChat } from './main-panel-chat';
 
-export default class Chat extends Block {
+export default class Chat extends Block<object> {
     init() {
         const LeftPanel = new LeftPanelChat({});
         const MainPanel = new MainPanelChat({

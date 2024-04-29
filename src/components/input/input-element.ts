@@ -1,19 +1,38 @@
-import Block, { Props } from '../../core/Block';
+import Block from 'core/Block';
 import ErrorLine from './error-line';
 import Input from './input';
 
-class InputElement extends Block {
-    constructor(props) {
+type Props = {
+    type: 'password' | 'text' | 'email' | 'tel';
+    label: string;
+    onBlur?: () => void;
+    error?: string;
+    className?: string;
+}
+
+class InputElement extends Block<Props> {
+    constructor(props: Props) {
         super({
             ...props,
-            Input: new Input({
-                type: props.type,
-                events: {
-                    blur: props.onBlur || (() => {}),
-                },
-            }),
-            ErrorLine: new ErrorLine(),
         });
+    }
+
+    init() {
+        const InputBlock = new Input({
+            ...this.props,
+            type: this.props.type,
+            events: {
+                blur: this.props.onBlur || (() => {}),
+            },
+        });
+
+        const ErrorLineBlock = new ErrorLine();
+
+        this.children = {
+            ...this.children,
+            InputBlock,
+            ErrorLineBlock,
+        };
     }
 
     componentDidUpdate(oldProps: Props, newProps: Props) {
@@ -21,18 +40,18 @@ class InputElement extends Block {
             return false;
         }
 
-        this.children.ErrorLine.setProps(newProps);
+        this.children.ErrorLineBlock.setProps(newProps);
         return true;
     }
 
     render(): string {
         return `
-        <div class="input {{#if error}}input__error{{/if}}" >
+        <div class="input{{#if error}} input__error{{/if}}" >
             <label class="input__container">
-                {{{ Input }}}
+                {{{ InputBlock }}}
                 <div class="input__label input__label-{{type}}">{{label}}</div>
             </label>
-            {{{ ErrorLine }}}
+            {{{ ErrorLineBlock }}}
         </div>
     `;
     }

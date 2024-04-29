@@ -4,8 +4,8 @@ import {
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
 
-export default class ProfileEditPage extends Block {
-    constructor(props) {
+export default class ProfileEditPage extends Block<object> {
+    constructor(props: object) {
         const formGroups = [{
             type: 'name', label: 'Почта', text: 'pochta@yandex.ru', name: 'email',
         }, {

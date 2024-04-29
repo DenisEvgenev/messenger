@@ -1,24 +1,24 @@
-type EventCallback<EventArgs extends unknown[] = []> = (...args: EventArgs) => void;
+export const EVENTS = {
+    INIT: 'init',
+    FLOW_CDM: 'flow:component-did-mount',
+    FLOW_CDU: 'flow:component-did-update',
+    FLOW_RENDER: 'flow:render',
+} as const;
 
-type EventMap = {
-    [event: string]: unknown[];
-}
+type Keys = keyof typeof EVENTS;
+export type Values = typeof EVENTS[Keys]
 
-export default class EventBus<Events extends EventMap> {
-    private listeners: { [E in keyof Events]?: EventCallback<Events[E]>[] };
+export default class EventBus<E extends Values> {
+    private listeners: { [key in E]?: Array<() => void> } = {};
 
-    constructor() {
-        this.listeners = {} as { [E in keyof Events]?: EventCallback<Events[E]>[] };
-    }
-
-    on<K extends keyof Events>(event: K, callback: EventCallback<Events[K]>): void {
+    on<F extends(...args: Parameters<F>) => void>(event: E, callback: F) {
         if (!this.listeners[event]) {
             this.listeners[event] = [];
         }
         this.listeners[event]!.push(callback);
     }
 
-    off<K extends keyof Events>(event: K, callback: EventCallback<Events[K]>): void {
+    off<F extends(...args: Parameters<F>) => void>(event: E, callback: F) {
         const eventListeners = this.listeners[event];
         if (!eventListeners) {
             throw new Error(`Нет события: ${String(event)}`);
@@ -26,12 +26,12 @@ export default class EventBus<Events extends EventMap> {
         this.listeners[event] = eventListeners.filter((listener) => listener !== callback);
     }
 
-    emit<K extends keyof Events>(event: K, ...args: Events[K]): void {
+    emit<F extends(...args: any) => void>(event: E, ...args: Parameters<F>): void {
         const eventListeners = this.listeners[event];
         if (!eventListeners) {
             return;
         }
-        eventListeners.forEach((listener) => {
+        eventListeners!.forEach((listener: F) => {
             listener(...args);
         });
     }

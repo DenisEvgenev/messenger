@@ -1,14 +1,18 @@
-import Block from '../../core/Block';
+import Block from 'core/Block';
 
-class Input extends Block {
-    constructor(props) {
-        super(props);
-    }
+export type Props = {
+    type: string;
+    events: {
+        blur: () => void;
+    },
+    className?: string;
+}
 
+class Input extends Block<Props> {
     render(): string {
         return `
             <input
-                class="input__element input__{{ type }}"
+                class="input__element{{#if className}} input__{{ className }}{{/if}}"
                 type={{type}}
                 placeholder=""
             />

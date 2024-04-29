@@ -1,18 +1,22 @@
-import { FormSignIn } from '../../components';
-import Block from '../../core/Block';
+import { FormSignIn, FormWrapper } from 'components';
+import Block from 'core/Block';
 
-export default class SignInPage extends Block {
-    constructor(props) {
-        super({
-            ...props,
-            FormSignIn: new FormSignIn({}),
+export default class SignInPage extends Block<object> {
+    init() {
+        const FormWrapperBlock = new FormWrapper({
+            FormBody: new FormSignIn(),
         });
+
+        this.children = {
+            ...this.children,
+            FormWrapperBlock,
+        };
     }
 
     render() {
         return `
             <div class="container">
-                {{{ FormSignIn }}}
+                {{{ FormWrapperBlock }}}
             </div>
         `;
     }

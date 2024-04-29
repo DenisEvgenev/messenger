@@ -1,11 +1,11 @@
 import { Chat } from 'components';
 import Block from '../../core/Block';
 
-export default class ChatPage extends Block {
-    constructor(props) {
+export default class ChatPage extends Block<object> {
+    constructor(props: object) {
         super({
             ...props,
-            Chat: new Chat({}),
+            Chat: new Chat(),
         });
     }
 

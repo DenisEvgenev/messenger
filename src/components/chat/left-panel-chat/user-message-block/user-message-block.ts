@@ -1,8 +1,11 @@
 import { Photo } from 'components/photo';
 import Block from 'core/Block';
 
-export default class UserMessageBlock extends Block {
-    constructor(props) {
+type Props = {
+    avatar: string;
+}
+export default class UserMessageBlock extends Block<Props> {
+    constructor(props: Props) {
         super({ ...props });
     }
 

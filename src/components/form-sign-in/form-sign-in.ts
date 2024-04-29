@@ -6,7 +6,17 @@ import {
     REGEXP_LOGIN, REGEXP_PASSWORD, REGEXP_NAME, REGEXP_MAIL, REGEXP_PHONE,
 } from 'constants/constants';
 
-export default class FormSignIn extends Block {
+type Props = {
+    login?: string;
+    name?: string;
+    lastName?: string;
+    mail?: string;
+    phone?: string;
+    password?: string;
+    passwordSecond?: string;
+}
+
+export default class FormSignIn extends Block<Props> {
     init() {
         const onChangeLoginBind = this.onChangeLogin.bind(this);
         const onChangeNameBind = this.onChangeName.bind(this);
@@ -18,20 +28,20 @@ export default class FormSignIn extends Block {
         const onRegisterBind = this.onRegister.bind(this);
 
         const TitleRegister = new Title({ title: 'Регистрация' });
-        const InputMail = new Input({ type: 'mail', label: 'Почта', onBlur: onChangeMailBind });
-        const InputLogin = new Input({ type: 'login', label: 'Логин', onBlur: onChangeLoginBind });
+        const InputMail = new Input({ type: 'email', label: 'Почта', onBlur: onChangeMailBind });
+        const InputLogin = new Input({ type: 'text', label: 'Логин', onBlur: onChangeLoginBind });
         const InputName = new Input({
-            type: 'name',
+            type: 'text',
             label: 'Имя',
             onBlur: onChangeNameBind,
         });
         const InputLastName = new Input({
-            type: 'name',
+            type: 'text',
             label: 'Фамилия',
             onBlur: onChangeLastNameBind,
         });
         const InputPhone = new Input({
-            type: 'phone',
+            type: 'tel',
             label: 'Телефон',
             onBlur: onChangePhoneBind,
         });
@@ -48,8 +58,11 @@ export default class FormSignIn extends Block {
 
         const ButtonRegister = new Button({
             label: 'Зарегистрироваться',
-            type: 'primary',
-            onClick: onRegisterBind,
+            type: 'submit',
+            disabled: true,
+            events: {
+                click: onRegisterBind,
+            },
         });
         const ButtonLogin = new Button({
             label: 'Войти', type: 'link', page: 'login',
@@ -70,7 +83,8 @@ export default class FormSignIn extends Block {
         };
     }
 
-    onChangeName({ target }) {
+    onChangeName(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (REGEXP_NAME.test(target.value)) {
@@ -86,7 +100,8 @@ export default class FormSignIn extends Block {
         this.setProps({ name: inputValue });
     }
 
-    onChangeLastName({ target }) {
+    onChangeLastName(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (REGEXP_NAME.test(target.value)) {
@@ -102,7 +117,8 @@ export default class FormSignIn extends Block {
         this.setProps({ lastName: inputValue });
     }
 
-    onChangeMail({ target }) {
+    onChangeMail(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (REGEXP_MAIL.test(target.value)) {
@@ -120,7 +136,8 @@ export default class FormSignIn extends Block {
         this.setProps({ mail: inputValue });
     }
 
-    onChangePhone({ target }) {
+    onChangePhone(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (REGEXP_PHONE.test(target.value)) {
@@ -136,8 +153,10 @@ export default class FormSignIn extends Block {
         this.setProps({ phone: inputValue });
     }
 
-    onChangeLogin({ target }) {
+    onChangeLogin(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
+
         if (REGEXP_LOGIN.test(target.value)) {
             this.children.InputLogin.setProps({ error: false, errorText: null });
         } else {
@@ -150,7 +169,8 @@ export default class FormSignIn extends Block {
         this.setProps({ login: inputValue });
     }
 
-    onChangePassword({ target }) {
+    onChangePassword(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (REGEXP_PASSWORD.test(target.value)) {
@@ -166,7 +186,8 @@ export default class FormSignIn extends Block {
         this.setProps({ password: inputValue });
     }
 
-    onChangePasswordSecond({ target }) {
+    onChangePasswordSecond(event: Event) {
+        const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
         if (REGEXP_PASSWORD.test(target.value)) {
@@ -186,12 +207,12 @@ export default class FormSignIn extends Block {
     onRegister() {
         console.log('===== onRegister =====', { ...this.props });
 
-        const isCorrectLogin = REGEXP_LOGIN.test(this.props.login);
-        const isCorrectName = REGEXP_NAME.test(this.props.name);
-        const isCorrectLastName = REGEXP_NAME.test(this.props.lastName);
-        const isCorrectMail = REGEXP_MAIL.test(this.props.mail);
-        const isCorrectPhone = REGEXP_PHONE.test(this.props.phone);
-        const isCorrectPassword = REGEXP_PASSWORD.test(this.props.password)
+        const isCorrectLogin = REGEXP_LOGIN.test(this.props.login || '');
+        const isCorrectName = REGEXP_NAME.test(this.props.name || '');
+        const isCorrectLastName = REGEXP_NAME.test(this.props.lastName || '');
+        const isCorrectMail = REGEXP_MAIL.test(this.props.mail || '');
+        const isCorrectPhone = REGEXP_PHONE.test(this.props.phone || '');
+        const isCorrectPassword = REGEXP_PASSWORD.test(this.props.password || '')
             && this.props.passwordSecond === this.props.password;
 
         if (!isCorrectPassword) {

@@ -3,20 +3,30 @@ import { Photo } from 'components/photo';
 import { Icon } from 'components/icon';
 import SettingsIcon from 'assets/settings.svg';
 
-export default class MainPanelChatTop extends Block {
-    constructor(props) {
+type Props = {
+    userName: string;
+    avatar: string;
+    lastMessage: string;
+    isYourLastMessage: boolean;
+    time: string;
+    countUnreadedMessages: number;
+}
+
+export default class MainPanelChatTop extends Block<Props> {
+    constructor(props: Props) {
         super({
             ...props,
-            Settings: new Icon({ src: SettingsIcon, size: 'xs' }),
         });
     }
 
     init() {
         const Avatar = new Photo({ avatar: this.props.avatar, type: 'top' });
+        const Settings = new Icon({ src: SettingsIcon, size: 'xs' });
 
         this.children = {
             ...this.children,
             Avatar,
+            Settings,
         };
     }
 
