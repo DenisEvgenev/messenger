@@ -26,6 +26,7 @@ Handlebars, SCSS, Typescript
 Если нужна просто сборка: `npm run build`
 
 Запустить stylelint с фиксом `npm run lint:scss` 
+Запустить typescript linter `npm run lint` 
 
 ## Входная точка
 Если запустили локально: http://localhost:3000/
