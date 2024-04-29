@@ -1,11 +1,11 @@
 import Block from 'core/Block';
 
 export type Group = {
-    classname?: string;
+    className?: string;
     type: string;
     label: string;
     text: string;
-    name?: string;
+    name: string;
 }
 export default class FormGroup extends Block<Group> {
     render() {

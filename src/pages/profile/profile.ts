@@ -1,39 +1,46 @@
 import { FormProfile, LeftPanel, Photo } from 'components';
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
+import { Group } from 'components/form-group/form-group';
 
 export default class ProfilePage extends Block<object> {
     constructor(props: object) {
-        const formGroups = [{
-            classname: 'form-group__input-disabled',
-            type: 'name',
+        const formGroups: Array<Group> = [{
+            className: 'form-group__input-disabled',
+            type: 'text',
             label: 'Почта',
             text: 'pochta@yandex.ru',
+            name: 'email',
         }, {
-            classname: 'form-group__input-disabled',
-            type: 'name',
+            className: 'form-group__input-disabled',
+            type: 'text',
             label: 'Логин',
             text: 'ivanivanov',
+            name: 'login',
         }, {
-            classname: 'form-group__input-disabled',
-            type: 'name',
+            className: 'form-group__input-disabled',
+            type: 'text',
             label: 'Имя',
             text: 'Иван',
+            name: 'first_name',
         }, {
-            classname: 'form-group__input-disabled',
-            type: 'name',
+            className: 'form-group__input-disabled',
+            type: 'text',
             label: 'Фамилия',
             text: 'Иванов',
+            name: 'second_name',
         }, {
-            classname: 'form-group__input-disabled',
-            type: 'name',
+            className: 'form-group__input-disabled',
+            type: 'text',
             label: 'Имя в чате',
             text: 'Иван',
+            name: 'display_name',
         }, {
-            classname: 'form-group__input-disabled',
-            type: 'name',
+            className: 'form-group__input-disabled',
+            type: 'text',
             label: 'Телефон',
             text: '+7 (909) 967 30 30',
+            name: 'phone',
         }];
 
         const buttons = [{
@@ -52,7 +59,7 @@ export default class ProfilePage extends Block<object> {
             formGroups: { label: 1 },
             FormProfileGroups: new FormProfile({ formGroups }),
             FormProfileButtons: new FormProfile({ buttons }),
-            Photo: new Photo({ type: 'main', avatar: emptyPhoto }),
+            Photo: new Photo({ avatar: emptyPhoto }),
             LeftPanel: new LeftPanel({ page: 'chat' }),
         });
     }

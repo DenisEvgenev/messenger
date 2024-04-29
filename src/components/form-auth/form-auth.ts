@@ -14,8 +14,11 @@ class FormAuth extends Block<Props> {
         const onLoginBind = this.onLogin.bind(this);
 
         const TitleLogin = new Title({ title: 'Вход' });
-        const InputLogin = new Input({ type: 'text', label: 'Логин', onBlur: onChangeLoginBind });
+        const InputLogin = new Input({
+            name: 'login', type: 'text', label: 'Логин', onBlur: onChangeLoginBind,
+        });
         const FormPassword = new Input({
+            name: 'password',
             type: 'password',
             label: 'Пароль',
             onBlur: onChangePasswordBind,

@@ -20,7 +20,7 @@ export default class MainPanelChatTop extends Block<Props> {
     }
 
     init() {
-        const Avatar = new Photo({ avatar: this.props.avatar, type: 'top' });
+        const Avatar = new Photo({ avatar: this.props.avatar });
         const Settings = new Icon({ src: SettingsIcon, size: 'xs' });
 
         this.children = {

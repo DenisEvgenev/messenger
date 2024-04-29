@@ -32,7 +32,7 @@ export function navigate(page: string) {
     container.innerHTML = Handlebars.compile(Source)(context);
 }
 
-document.addEventListener('DOMContentLoaded', () => navigate('login'));
+document.addEventListener('DOMContentLoaded', () => navigate('profile'));
 
 document.addEventListener('click', (e) => {
     if (e.target && e.target instanceof HTMLElement) {

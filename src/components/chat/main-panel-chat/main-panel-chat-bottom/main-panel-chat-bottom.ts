@@ -26,6 +26,7 @@ export default class MainPanelChatBottom extends Block<Props> {
             size: 'm',
         });
         const Message = new Input({
+            name: 'message',
             type: 'text',
             label: 'Сообщение',
             onBlur: onChangeMessageBind,

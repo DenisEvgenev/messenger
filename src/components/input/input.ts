@@ -6,6 +6,7 @@ export type Props = {
         blur: () => void;
     },
     className?: string;
+    name: string;
 }
 
 class Input extends Block<Props> {
@@ -14,6 +15,7 @@ class Input extends Block<Props> {
             <input
                 class="input__element{{#if className}} input__{{ className }}{{/if}}"
                 type={{type}}
+                name={{name}}
                 placeholder=""
             />
         `;

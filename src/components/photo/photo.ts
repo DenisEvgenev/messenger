@@ -1,13 +1,23 @@
 import Block from 'core/Block';
 
-export default class Photo extends Block<object> {
-    constructor(props: object) {
+const REGEXP_IMAGE_NAME = /\/([^/]+)\.\w+$/;
+
+type Props = {
+    avatar: string;
+    imageName?: string;
+}
+
+export default class Photo extends Block<Props> {
+    constructor(props: Props) {
+        const imageName = props.avatar.match(REGEXP_IMAGE_NAME)?.[1];
+
         super({
             ...props,
+            imageName: imageName ?? 'Empty image',
         });
     }
 
     render() {
-        return ('<img src="{{avatar}}" class="image image__{{type}}" />');
+        return ('<img alt="{{imageName}}" src="{{avatar}}" class="image image__{{type}}" />');
     }
 }

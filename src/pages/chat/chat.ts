@@ -1,5 +1,5 @@
 import { Chat } from 'components';
-import Block from '../../core/Block';
+import Block from 'core/Block';
 
 export default class ChatPage extends Block<object> {
     constructor(props: object) {

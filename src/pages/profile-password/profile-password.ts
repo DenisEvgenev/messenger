@@ -17,7 +17,7 @@ export default class ProfilePasswordPage extends Block<object> {
         super({
             ...props,
             FormProfileGroups: new FormProfile({ formGroups }),
-            Photo: new Photo({ type: 'main', avatar: emptyPhoto }),
+            Photo: new Photo({ avatar: emptyPhoto }),
             LeftPanel: new LeftPanel({ page: 'chat' }),
             ButtonSave: new Button({ label: 'Сохранить', type: 'primary', page: 'profile' }),
         });

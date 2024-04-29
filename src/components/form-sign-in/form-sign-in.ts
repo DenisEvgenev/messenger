@@ -28,29 +28,38 @@ export default class FormSignIn extends Block<Props> {
         const onRegisterBind = this.onRegister.bind(this);
 
         const TitleRegister = new Title({ title: 'Регистрация' });
-        const InputMail = new Input({ type: 'email', label: 'Почта', onBlur: onChangeMailBind });
-        const InputLogin = new Input({ type: 'text', label: 'Логин', onBlur: onChangeLoginBind });
+        const InputMail = new Input({
+            name: 'email', type: 'email', label: 'Почта', onBlur: onChangeMailBind,
+        });
+        const InputLogin = new Input({
+            name: 'login', type: 'text', label: 'Логин', onBlur: onChangeLoginBind,
+        });
         const InputName = new Input({
+            name: 'first_name',
             type: 'text',
             label: 'Имя',
             onBlur: onChangeNameBind,
         });
         const InputLastName = new Input({
+            name: 'second_name',
             type: 'text',
             label: 'Фамилия',
             onBlur: onChangeLastNameBind,
         });
         const InputPhone = new Input({
+            name: 'phone',
             type: 'tel',
             label: 'Телефон',
             onBlur: onChangePhoneBind,
         });
         const FormPassword = new Input({
+            name: 'password',
             type: 'password',
             label: 'Пароль',
             onBlur: onChangePasswordBind,
         });
         const FormPasswordSecond = new Input({
+            name: 'password',
             type: 'password',
             label: 'Пароль ещё раз',
             onBlur: onChangePasswordSecondBind,

@@ -59,7 +59,11 @@ export default class LeftPanelChat extends Block<Props> {
             type: 'link-chat',
             page: 'profile',
         });
-        const SearchLine = new Input({ type: 'text', label: '🔍 Поиск' });
+        const SearchLine = new Input({
+            name: 'searchLine',
+            type: 'text',
+            label: '🔍 Поиск',
+        });
 
         this.children = {
             ...this.children,

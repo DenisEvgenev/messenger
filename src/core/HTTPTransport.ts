@@ -14,6 +14,8 @@ interface RequestOptions {
     data?: Record<string, unknown>;
 }
 
+type HTTPMethod = (url: string, options: RequestOptions) => Promise<XMLHttpRequest>;
+
 function queryStringify(data: Record<string, unknown>): string {
     if (typeof data !== 'object') {
         throw new Error('Data must be object');
@@ -25,16 +27,16 @@ function queryStringify(data: Record<string, unknown>): string {
 }
 
 export default class HTTPTransport {
-    get = (url: string, options: RequestOptions): Promise<XMLHttpRequest> =>
+    get: HTTPMethod = (url, options) =>
         this.request(url, { ...options, method: METHODS.GET }, options.timeout);
 
-    post = (url: string, options: RequestOptions): Promise<XMLHttpRequest> =>
+    post: HTTPMethod = (url, options) =>
         this.request(url, { ...options, method: METHODS.POST }, options.timeout);
 
-    put = (url: string, options: RequestOptions): Promise<XMLHttpRequest> =>
+    put: HTTPMethod = (url, options) =>
         this.request(url, { ...options, method: METHODS.PUT }, options.timeout);
 
-    delete = (url: string, options: RequestOptions): Promise<XMLHttpRequest> =>
+    delete: HTTPMethod = (url, options) =>
         this.request(url, { ...options, method: METHODS.DELETE }, options.timeout);
 
     request = (

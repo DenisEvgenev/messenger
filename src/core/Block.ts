@@ -11,6 +11,8 @@ export default class Block<Props extends object> {
 
     private _meta: { tagName: string };
 
+    private eventListeners: { [key: string]: EventListener};
+
     public id: string;
 
     private eventbus: EventBus<Values>;
@@ -36,13 +38,24 @@ export default class Block<Props extends object> {
         const { events = {} } = this.props as { events?: { [key: string]: EventListener } };
 
         Object.keys(events).forEach((eventName) => {
+            const eventListener = events[eventName];
             if (this._element !== null) {
                 this._element.addEventListener(
                     eventName as string,
                     events[eventName] as EventListener,
                 );
+                this.eventListeners[eventName] = eventListener;
             }
         });
+    }
+
+    private removeEvents() {
+        if (this._element !== null) {
+            Object.keys(this.eventListeners).forEach((eventName) => {
+                this._element?.removeEventListener(eventName, this.eventListeners[eventName]);
+            });
+        }
+        this.eventListeners = {};
     }
 
     private registerEvents(eventBus: { on: (arg0: string, arg1: unknown) => void; }) {
@@ -124,6 +137,8 @@ export default class Block<Props extends object> {
     }
 
     _render() {
+        this.removeEvents();
+
         const propsAndStubs = { ...this.props };
 
         Object.entries(this.children).forEach(([key, child]) => {
@@ -137,9 +152,9 @@ export default class Block<Props extends object> {
 
         Object.values(this.children).forEach((child) => {
             const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
-            // console.log('===== 140 =====', stub);
+
             const content = child.getContent();
-            // console.log('===== 142 =====', content);
+
             if (content && stub && stub.parentNode) {
                 stub.replaceWith(content);
             }

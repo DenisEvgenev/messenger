@@ -2,16 +2,17 @@ import Block from 'core/Block';
 import ErrorLine from './error-line';
 import Input from './input';
 
-type Props = {
+export type InputProps = {
     type: 'password' | 'text' | 'email' | 'tel';
     label: string;
     onBlur?: () => void;
     error?: string;
     className?: string;
+    name: string;
 }
 
-class InputElement extends Block<Props> {
-    constructor(props: Props) {
+class InputElement extends Block<InputProps> {
+    constructor(props: InputProps) {
         super({
             ...props,
         });
@@ -24,6 +25,7 @@ class InputElement extends Block<Props> {
             events: {
                 blur: this.props.onBlur || (() => {}),
             },
+            name: this.props.name,
         });
 
         const ErrorLineBlock = new ErrorLine();
@@ -35,7 +37,7 @@ class InputElement extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props) {
+    componentDidUpdate(oldProps: InputProps, newProps: InputProps) {
         if (oldProps === newProps) {
             return false;
         }
