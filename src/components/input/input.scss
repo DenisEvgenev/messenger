@@ -18,6 +18,23 @@
     transition:
       font-size 0.5s,
       transform 0.5s;
+
+    &-search-line {    
+      align-items: center;
+      transform: translateY(-22px);
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+    }
+
+    &-message {    
+      align-items: start;
+      transform: translateY(-22px);
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      padding-left: 20px;
+    }
   }
 
   &__element {
@@ -38,12 +55,22 @@
         transform: translateY(-36px);
         font-size: 9px;
       }
+
+      & + .input__label-search-line,
+      & + .input__label-message {
+        display: none;
+      }
     }
 
     &:focus {
       & + .input__label {
         transform: translateY(-36px);
         font-size: 9px;
+      }
+
+      & + .input__label-search-line,
+      & + .input__label-message {
+        display: none;
       }
     }
   }
@@ -62,5 +89,19 @@
 
   &__error &__element {
     color: var(--error-color);
+  }
+
+  &__search-line {
+    background-color: #EFEFEF;
+    border-radius: 5px;
+    padding: 8px;
+    border: none;
+  }
+
+  &__message {
+    background-color: #EFEFEF;
+    padding: 8px 8px 8px 20px;
+    border: none;
+    border-radius: 30px;
   }
 }

@@ -1,0 +1,20 @@
+.main-panel-chat-top {
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    padding: 10px 0;
+    margin: 0 20px;
+
+    &__settings {
+        margin-left: auto;
+        padding: 11px 0;
+    }
+
+    &__user-name {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-color);
+        padding-left: 10px;
+        line-height: 34px;
+    }
+}

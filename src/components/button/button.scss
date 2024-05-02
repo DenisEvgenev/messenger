@@ -8,10 +8,15 @@
   border-radius: 8px;
   cursor: pointer;
 
-  &__primary {
+  &__submit {
     background-color: var(--main-color);
     color: #fff;
     font-size: 13px;
+  }
+
+  &__invisible {
+    background: none;
+    outline: none;
   }
 
   &__link {
@@ -34,6 +39,14 @@
       font-size: 13px;
       line-height: 13px;
       text-align: start;
+    }
+
+    &-chat {
+      color: var(--text-secondary-color);
+      padding: 12px;
+      font-size: 13px;
+      line-height: 13px;
+      text-align: end;
     }
   }
 }
