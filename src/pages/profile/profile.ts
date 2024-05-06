@@ -44,14 +44,17 @@ export default class ProfilePage extends Block<object> {
         }];
 
         const buttons = [{
-            classname: 'link-profile', type: 'link', label: 'Изменить данные', page: 'profile-edit',
+            classname: 'link-profile',
+            type: 'link',
+            label: 'Изменить данные',
+            page: '/profile-edit',
         }, {
             classname: 'link-profile',
             type: 'link',
             label: 'Изменить пароль',
-            page: 'profile-password',
+            page: '/profile-password',
         }, {
-            classname: 'link-exit', type: 'link', label: 'Выйти', page: 'login',
+            classname: 'link-exit', type: 'link', label: 'Выйти', page: '/',
         }];
 
         super({
@@ -60,17 +63,29 @@ export default class ProfilePage extends Block<object> {
             FormProfileGroups: new FormProfile({ formGroups }),
             FormProfileButtons: new FormProfile({ buttons }),
             Photo: new Photo({ avatar: emptyPhoto }),
-            LeftPanel: new LeftPanel({ page: 'chat' }),
         });
+    }
+
+    init() {
+        const LeftPanelBlock = new LeftPanel({
+            onClick: "window.router.go('/messenger')",
+        });
+
+        this.children = {
+            ...this.children,
+            LeftPanelBlock,
+        };
     }
 
     render() {
         return `
-            <div class="container">
-                {{{ Photo }}}
-                {{{ FormProfileGroups }}}
-                {{{ FormProfileButtons }}}
-                {{{ LeftPanel }}}
+            <div>
+                <div class="container">
+                    {{{ Photo }}}
+                    {{{ FormProfileGroups }}}
+                    {{{ FormProfileButtons }}}
+                    {{{ LeftPanelBlock }}}
+                </div>
             </div>
         `;
     }

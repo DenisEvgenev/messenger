@@ -26,16 +26,12 @@ class FormAuth extends Block<Props> {
         const ButtonLogin = new Button({
             label: 'Авторизироваться',
             type: 'submit',
-            disabled: true,
-            events: {
-                click: onLoginBind || (() => {}),
-            },
-            page: 'chat',
+            onClick: onLoginBind,
         });
         const ButtonCreateAccount = new Button({
             label: 'Нет аккаунта?',
             type: 'link',
-            page: 'sign-in',
+            page: '/sign-up',
         });
 
         this.children = {
@@ -99,14 +95,10 @@ class FormAuth extends Block<Props> {
                 error: true,
                 errorText: 'Используйте только буквы, начиная с заглавной',
             });
-        } else {
-            this.children.InputLogin.setProps({ error: false, errorText: null });
         }
 
         if (isCorrectLogin && isCorrectPassword) {
-            this.children.ButtonLogin.setProps({ disabled: false });
-        } else {
-            this.children.ButtonLogin.setProps({ disabled: true });
+            window.router.go('/messenger');
         }
         console.log('===== Параметры =====', {
             ...this.props,

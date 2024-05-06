@@ -24,20 +24,22 @@ export default class ProfileEditPage extends Block<object> {
             ...props,
             FormProfileGroups: new FormProfile({ formGroups }),
             Photo: new Photo({ avatar: emptyPhoto }),
-            LeftPanel: new LeftPanel({ page: 'chat' }),
-            ButtonSave: new Button({ label: 'Сохранить', type: 'primary', page: 'profile' }),
+            LeftPanel: new LeftPanel({ onClick: "window.router.go('/messenger')" }),
+            ButtonSave: new Button({ label: 'Сохранить', type: 'primary', page: '/settings' }),
         });
     }
 
     render() {
         return `
-            <div class="container">
-                {{{ Photo }}}
-                {{{ FormProfileGroups }}}
-                <div class="button-container">
-                    {{{ ButtonSave }}}
+            <div>
+                <div class="container">
+                    {{{ Photo }}}
+                    {{{ FormProfileGroups }}}
+                    <div class="button-container">
+                        {{{ ButtonSave }}}
+                    </div>
+                    {{{ LeftPanel }}}
                 </div>
-                {{{ LeftPanel }}}
             </div>
         `;
     }

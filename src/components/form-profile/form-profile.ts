@@ -40,12 +40,12 @@ export default class FormProfile extends Block<Props> {
     render() {
         return (
             `
-            <form class="form-profile">
+            <div class="form-profile">
                 ${this.props.formGroupComponentKeys?.map(
                 (key: string) => `{{{ ${key} }}}`,
             ).join('')}
                 ${this.props.buttonComponentKeys?.map((key: string) => `{{{ ${key} }}}`).join('')}
-            </form>
+            </div>
             `
         );
     }

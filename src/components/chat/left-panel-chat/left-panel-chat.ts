@@ -57,7 +57,9 @@ export default class LeftPanelChat extends Block<Props> {
         const ButtonProfile = new Button({
             label: 'Профиль >',
             type: 'link-chat',
-            page: 'profile',
+            events: {
+                click: () => window.router.go('/settings'),
+            },
         });
         const SearchLine = new Input({
             name: 'searchLine',

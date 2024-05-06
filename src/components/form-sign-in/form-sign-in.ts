@@ -68,13 +68,12 @@ export default class FormSignIn extends Block<Props> {
         const ButtonRegister = new Button({
             label: 'Зарегистрироваться',
             type: 'submit',
-            disabled: true,
-            events: {
-                click: onRegisterBind,
-            },
+            onClick: onRegisterBind,
         });
         const ButtonLogin = new Button({
-            label: 'Войти', type: 'link', page: 'login',
+            label: 'Войти',
+            type: 'link',
+            page: '/',
         });
 
         this.children = {
@@ -284,15 +283,13 @@ export default class FormSignIn extends Block<Props> {
             && isCorrectMail
             && isCorrectPhone
         ) {
-            this.children.ButtonRegister.setProps({ disabled: false });
-        } else {
-            this.children.ButtonRegister.setProps({ disabled: true });
+            window.router.go('/messenger');
         }
     }
 
     render() {
         return (`
-            <form class="sign-in-form">
+            <div class="sign-in-form">
                 {{{ Title }}}
                 {{{ InputMail }}}
                 {{{ InputLogin }}}
@@ -303,7 +300,7 @@ export default class FormSignIn extends Block<Props> {
                 {{{ FormPasswordSecond }}}
                 {{{ ButtonRegister }}}
                 {{{ ButtonLogin }}}
-            </form>
+            </div>
         `);
     }
 }
