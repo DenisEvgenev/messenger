@@ -136,6 +136,12 @@ export default class Block<Props extends object> {
         return this._element;
     }
 
+    _componentWillUnmount() {
+        this.componentWillUnmount();
+    }
+
+    componentWillUnmount() {}
+
     _render() {
         this.removeEvents();
 

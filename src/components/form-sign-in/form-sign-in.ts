@@ -5,15 +5,18 @@ import Block from 'core/Block';
 import {
     REGEXP_LOGIN, REGEXP_PASSWORD, REGEXP_NAME, REGEXP_MAIL, REGEXP_PHONE,
 } from 'constants/constants';
+import {
+    fillEmail, fillFirstName, fillLogin, fillPassword, fillPhone, fillSecondName,
+} from 'services/setAutorizationFields';
 
 type Props = {
-    login?: string;
-    name?: string;
-    lastName?: string;
-    mail?: string;
-    phone?: string;
-    password?: string;
-    passwordSecond?: string;
+    passwordSecond: string;
+    loginField: string;
+    passwordField: string;
+    firstNameField: string;
+    secondNameField: string;
+    emailField: string;
+    phoneField: string;
 }
 
 export default class FormSignIn extends Block<Props> {
@@ -105,7 +108,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ name: inputValue });
+        fillFirstName(inputValue);
     }
 
     onChangeLastName(event: Event) {
@@ -122,7 +125,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ lastName: inputValue });
+        fillSecondName(inputValue);
     }
 
     onChangeMail(event: Event) {
@@ -141,7 +144,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ mail: inputValue });
+        fillEmail(inputValue);
     }
 
     onChangePhone(event: Event) {
@@ -158,7 +161,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ phone: inputValue });
+        fillPhone(inputValue);
     }
 
     onChangeLogin(event: Event) {
@@ -174,7 +177,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ login: inputValue });
+        fillLogin(inputValue);
     }
 
     onChangePassword(event: Event) {
@@ -191,7 +194,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ password: inputValue });
+        fillPassword(inputValue);
     }
 
     onChangePasswordSecond(event: Event) {
@@ -209,19 +212,17 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        this.setProps({ passwordSecond: inputValue });
+        this.setProps({ ...this.props, passwordSecond: inputValue });
     }
 
     onRegister() {
-        console.log('===== onRegister =====', { ...this.props });
-
-        const isCorrectLogin = REGEXP_LOGIN.test(this.props.login || '');
-        const isCorrectName = REGEXP_NAME.test(this.props.name || '');
-        const isCorrectLastName = REGEXP_NAME.test(this.props.lastName || '');
-        const isCorrectMail = REGEXP_MAIL.test(this.props.mail || '');
-        const isCorrectPhone = REGEXP_PHONE.test(this.props.phone || '');
-        const isCorrectPassword = REGEXP_PASSWORD.test(this.props.password || '')
-            && this.props.passwordSecond === this.props.password;
+        const isCorrectLogin = REGEXP_LOGIN.test(this.props.loginField || '');
+        const isCorrectName = REGEXP_NAME.test(this.props.firstNameField || '');
+        const isCorrectLastName = REGEXP_NAME.test(this.props.secondNameField || '');
+        const isCorrectMail = REGEXP_MAIL.test(this.props.emailField || '');
+        const isCorrectPhone = REGEXP_PHONE.test(this.props.phoneField || '');
+        const isCorrectPassword = REGEXP_PASSWORD.test(this.props.passwordField || '')
+            && this.props.passwordSecond === this.props.passwordField;
 
         if (!isCorrectPassword) {
             this.children.FormPassword.setProps({
@@ -251,7 +252,7 @@ export default class FormSignIn extends Block<Props> {
             });
         }
 
-        if (!isCorrectLogin) {
+        if (!isCorrectLastName) {
             this.children.InputLastName.setProps({
                 error: true,
                 errorText: 'Используйте только буквы, начиная с заглавной',
@@ -274,16 +275,6 @@ export default class FormSignIn extends Block<Props> {
                 errorText: 'Номер телефона должен быть от 10 до 15 символов, '
                 + 'состоять из цифр, может начинается с плюса.',
             });
-        }
-
-        if (isCorrectLogin
-            && isCorrectPassword
-            && isCorrectName
-            && isCorrectLastName
-            && isCorrectMail
-            && isCorrectPhone
-        ) {
-            window.router.go('/messenger');
         }
     }
 

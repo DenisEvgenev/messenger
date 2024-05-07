@@ -1,6 +1,7 @@
 export { Button } from './button';
 export { FormAuth } from './form-auth';
 export { FormSignIn } from './form-sign-in';
+export { PopupError } from './popup-error';
 export { Chat } from './chat';
 export { FormProfile } from './form-profile';
 export { FormGroup } from './form-group';

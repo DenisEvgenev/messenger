@@ -2,6 +2,7 @@ import Block from 'core/Block';
 import { Photo } from 'components/photo';
 import { Icon } from 'components/icon';
 import SettingsIcon from 'assets/settings.svg';
+import { logout } from 'services/auth';
 
 type Props = {
     userName: string;
@@ -21,7 +22,13 @@ export default class MainPanelChatTop extends Block<Props> {
 
     init() {
         const Avatar = new Photo({ avatar: this.props.avatar });
-        const Settings = new Icon({ src: SettingsIcon, size: 'xs' });
+        const Settings = new Icon({
+            src: SettingsIcon,
+            size: 'xs',
+            events: {
+                click: () => logout(),
+            },
+        });
 
         this.children = {
             ...this.children,
