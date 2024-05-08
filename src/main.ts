@@ -1,6 +1,7 @@
 import * as Handlebars from 'handlebars';
 import Router from 'core/Router';
 import Store from 'core/Store';
+import middlewares from 'utils/middlewares';
 import * as Components from './components';
 import * as Pages from './pages';
 
@@ -30,12 +31,12 @@ Object.entries(Components).forEach(([name, component]) => {
 });
 
 router
-    .use('/', Pages.LoginPage)
-    .use('/sign-up', Pages.SignInPage)
-    .use('/settings', Pages.ProfilePage)
-    .use('/profile-edit', Pages.ProfileEditPage)
-    .use('/profile-password', Pages.ProfilePasswordPage)
-    .use('/messenger', Pages.ChatPage)
-    .use('*', Pages.ClientErrorPage)
-    .use('/500', Pages.ServerErrorPage)
+    .use('/', Pages.LoginPage, middlewares)
+    .use('/sign-up', Pages.SignInPage, middlewares)
+    .use('/settings', Pages.ProfilePage, middlewares)
+    .use('/profile-edit', Pages.ProfileEditPage, middlewares)
+    .use('/profile-password', Pages.ProfilePasswordPage, middlewares)
+    .use('/messenger', Pages.ChatPage, middlewares)
+    .use('*', Pages.ClientErrorPage, {})
+    .use('/500', Pages.ServerErrorPage, {})
     .start();

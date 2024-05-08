@@ -21,3 +21,7 @@ export const fillPhone = (value: string) => {
 export const fillEmail = (value: string) => {
     window.store.set({ emailField: value });
 };
+
+export const fillDisplayName = (value: string) => {
+    window.store.set({ displayNameField: value });
+};

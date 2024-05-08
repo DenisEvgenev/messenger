@@ -1,92 +1,60 @@
 import { FormProfile, LeftPanel, Photo } from 'components';
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
-import { Group } from 'components/form-group/form-group';
+import { connect } from 'utils/connect';
+import { UserDTO } from 'api/types';
 
-export default class ProfilePage extends Block<object> {
-    constructor(props: object) {
-        const formGroups: Array<Group> = [{
-            className: 'form-group__input-disabled',
-            type: 'text',
-            label: 'Почта',
-            text: 'pochta@yandex.ru',
-            name: 'email',
-        }, {
-            className: 'form-group__input-disabled',
-            type: 'text',
-            label: 'Логин',
-            text: 'ivanivanov',
-            name: 'login',
-        }, {
-            className: 'form-group__input-disabled',
-            type: 'text',
-            label: 'Имя',
-            text: 'Иван',
-            name: 'first_name',
-        }, {
-            className: 'form-group__input-disabled',
-            type: 'text',
-            label: 'Фамилия',
-            text: 'Иванов',
-            name: 'second_name',
-        }, {
-            className: 'form-group__input-disabled',
-            type: 'text',
-            label: 'Имя в чате',
-            text: 'Иван',
-            name: 'display_name',
-        }, {
-            className: 'form-group__input-disabled',
-            type: 'text',
-            label: 'Телефон',
-            text: '+7 (909) 967 30 30',
-            name: 'phone',
-        }];
+type Props = {
+    userData: UserDTO;
+    avatar: string;
+}
 
-        const buttons = [{
-            classname: 'link-profile',
-            type: 'link',
-            label: 'Изменить данные',
-            page: '/profile-edit',
-        }, {
-            classname: 'link-profile',
-            type: 'link',
-            label: 'Изменить пароль',
-            page: '/profile-password',
-        }, {
-            classname: 'link-exit', type: 'link', label: 'Выйти', page: '/',
-        }];
-
-        super({
-            ...props,
-            formGroups: { label: 1 },
-            FormProfileGroups: new FormProfile({ formGroups }),
-            FormProfileButtons: new FormProfile({ buttons }),
-            Photo: new Photo({ avatar: emptyPhoto }),
-        });
-    }
-
+class ProfilePage extends Block<Props> {
     init() {
+        const PhotoBlock = new Photo({ avatar: this.props.avatar, type: 'main' });
         const LeftPanelBlock = new LeftPanel({
             onClick: "window.router.go('/messenger')",
         });
 
+        const FormProfileGroups = new FormProfile({});
         this.children = {
             ...this.children,
+            FormProfileGroups,
             LeftPanelBlock,
+            PhotoBlock,
         };
+    }
+
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+        if (oldProps === newProps) {
+            return false;
+        }
+
+        this.children.PhotoBlock.setProps({ avatar: newProps.avatar });
+        return true;
     }
 
     render() {
         return `
             <div>
                 <div class="container">
-                    {{{ Photo }}}
+                    {{{ PhotoBlock }}}
                     {{{ FormProfileGroups }}}
-                    {{{ FormProfileButtons }}}
                     {{{ LeftPanelBlock }}}
                 </div>
             </div>
         `;
     }
 }
+
+const mapStateToProps = ({ userData, isLoading }:
+    { userData: UserDTO, isLoading: boolean }) =>
+    ({
+        userData,
+        isLoading,
+        avatar: userData?.avatar
+            ? `https://ya-praktikum.tech/api/v2/resources${userData?.avatar}`
+            : emptyPhoto,
+    });
+
+export default connect(mapStateToProps)(ProfilePage);

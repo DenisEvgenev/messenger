@@ -38,6 +38,10 @@ class SignInPage extends Block<Props> {
     }
 
     componentDidUpdate(oldProps: Props, newProps: Props): boolean {
+        if (oldProps === newProps) {
+            return false;
+        }
+
         this.children.FormWrapperBlock.children.FormBody.setProps({ ...oldProps, ...newProps });
         return true;
     }

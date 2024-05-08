@@ -1,40 +1,75 @@
 import {
-    Button, FormProfile, LeftPanel, Photo,
+    FormEditPassword, LeftPanel, Photo, PopupError,
 } from 'components';
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
+import { connect } from 'utils/connect';
+import { changePassword } from 'services/user';
+import { UserDTO } from 'api/types';
 
-export default class ProfilePasswordPage extends Block<object> {
-    constructor(props: object) {
-        const formGroups = [{
-            type: 'password', label: 'Старый пароль', text: '12345678', name: 'oldPassword',
-        }, {
-            type: 'password', label: 'Новый пароль', text: '', name: 'newPassword',
-        }, {
-            type: 'password', label: 'Повторите новый пароль', text: '', name: 'newPassword',
-        }];
+type Props = {
+    oldPasswordField: string;
+    newPasswordField: string;
+    userData: UserDTO;
+    avatar: string;
+}
 
-        super({
-            ...props,
-            FormProfileGroups: new FormProfile({ formGroups }),
-            Photo: new Photo({ avatar: emptyPhoto }),
-            LeftPanel: new LeftPanel({ onClick: "window.router.go('/messenger')" }),
-            ButtonSave: new Button({ label: 'Сохранить', type: 'primary', page: '/settings' }),
+class ProfileEditPage extends Block<Props> {
+    init() {
+        const PhotoBlock = new Photo({ avatar: this.props?.avatar, type: 'main' });
+        const LeftPanelBlock = new LeftPanel({ onClick: "window.router.go('/settings')" });
+        const FormEditBlock = new FormEditPassword({
+            onSubmit: (e: Event) => {
+                e.preventDefault();
+                changePassword({
+                    oldPassword: this.props.oldPasswordField,
+                    newPassword: this.props.newPasswordField,
+                });
+            },
         });
+        const PopupErrorBlock = new PopupError({});
+
+        this.children = {
+            ...this.children,
+            FormEditBlock,
+            PhotoBlock,
+            LeftPanelBlock,
+            PopupErrorBlock,
+        };
+    }
+
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+        if (oldProps === newProps) {
+            return false;
+        }
+
+        this.children.PhotoBlock.setProps({ avatar: newProps.avatar });
+        return true;
     }
 
     render() {
         return `
             <div>
+                {{{ PopupErrorBlock }}}
                 <div class="container">
-                    {{{ Photo }}}
-                    {{{ FormProfileGroups }}}
-                    <div class="button-container">
-                        {{{ ButtonSave }}}
-                    </div>
-                    {{{ LeftPanel }}}
+                    {{{ PhotoBlock }}}
+                    {{{ FormEditBlock }}}
+                    {{{ LeftPanelBlock }}}
                 </div>
             </div>
         `;
     }
 }
+
+const mapStateToProps = ({
+    oldPasswordField,
+    newPasswordField,
+    userData,
+}: Props) => ({
+    oldPasswordField,
+    newPasswordField,
+    avatar: userData?.avatar
+        ? `https://ya-praktikum.tech/api/v2/resources${userData?.avatar}`
+        : emptyPhoto,
+});
+export default connect(mapStateToProps)(ProfileEditPage);

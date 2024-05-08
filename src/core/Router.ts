@@ -1,5 +1,5 @@
 import Block from './Block';
-import Route from './Route';
+import Route, { Middlewares } from './Route';
 
 class Router {
     private static instance: Router;
@@ -32,8 +32,8 @@ class Router {
         return Router.instance;
     }
 
-    use(pathname: string, block: new (...args: any[]) => Block<object>) {
-        const route = new Route(pathname, block, { rootQuery: this.rootQuery });
+    use(pathname: string, block: new (...args: any[]) => Block<object>, middlewares: Middlewares) {
+        const route = new Route(pathname, block, { rootQuery: this.rootQuery }, middlewares);
         this.routes.push(route);
         return this;
     }
@@ -57,6 +57,7 @@ class Router {
         if (this.currentRoute && this.currentRoute !== route) {
             this.currentRoute.leave();
         }
+        route.runMiddlewares();
 
         this.currentRoute = route;
 

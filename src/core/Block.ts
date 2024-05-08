@@ -36,7 +36,6 @@ export default class Block<Props extends object> {
 
     private addEvents() {
         const { events = {} } = this.props as { events?: { [key: string]: EventListener } };
-
         Object.keys(events).forEach((eventName) => {
             const eventListener = events[eventName];
             if (this._element !== null) {
@@ -136,11 +135,13 @@ export default class Block<Props extends object> {
         return this._element;
     }
 
-    _componentWillUnmount() {
+    private _componentWillUnmount() {
         this.componentWillUnmount();
     }
 
-    componentWillUnmount() {}
+    componentWillUnmount() {
+        this.removeEvents();
+    }
 
     _render() {
         this.removeEvents();
@@ -214,6 +215,7 @@ export default class Block<Props extends object> {
     }
 
     remove() {
+        this._componentWillUnmount();
         this.getContent()?.remove();
     }
 }

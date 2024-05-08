@@ -6,6 +6,10 @@ type Props = {
 
 type BlockClass = new (...args: any[]) => Block<object>;
 
+export type Middlewares = {
+    [key: string]: () => void;
+}
+
 class Route {
     private pathname: string;
 
@@ -15,10 +19,18 @@ class Route {
 
     private props: Props;
 
-    constructor(pathname: string, view: BlockClass, props: Props) {
+    private middlewares: Middlewares;
+
+    constructor(pathname: string, view: BlockClass, props: Props, middlewares: Middlewares) {
         this.pathname = pathname;
         this.BlockClass = view;
         this.props = props;
+        this.middlewares = middlewares;
+    }
+
+    runMiddlewares() {
+        const middlewares = Object.values(this.middlewares);
+        middlewares?.forEach((middleware) => middleware());
     }
 
     navigate(pathname: string) {

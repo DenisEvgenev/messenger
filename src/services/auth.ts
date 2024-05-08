@@ -18,12 +18,17 @@ export const login = async (model: LoginRequestData) => {
     }
 };
 
-export const me = async () => {
+export const me = async (): Promise<object | void> => {
     window.store.set({ isLoading: true });
     try {
-        await authApi.me();
+        const { response } = await authApi.me();
+        if (['/', '/sign-up'].includes(window.location.pathname)) {
+            window.router.go('/messenger');
+        }
+        return JSON.parse(response);
     } catch (error) {
-        console.error('Неизвестная ошибка', error);
+        return !['/', '/sign-up'].includes(window.location.pathname)
+            ? window.router.go('/') : undefined;
     } finally {
         window.store.set({ isLoading: false });
     }
@@ -35,7 +40,8 @@ export const registration = async (model: CreateUser) => {
         await authApi.registration(model);
         window.router.go('/');
     } catch (error) {
-        window.store.set({ popupErrorText: 'Заполнены не все поля' });
+        const { reason } = JSON.parse(error);
+        window.store.set({ popupErrorText: reason });
         setTimeout(() => {
             window.store.set({ popupErrorText: '' });
         }, 2000);
@@ -50,7 +56,11 @@ export const logout = async () => {
         await authApi.logout();
         window.router.go('/');
     } catch (error) {
-        console.error('Неизвестная ошибка');
+        const { reason } = JSON.parse(error);
+        window.store.set({ popupErrorText: reason });
+        setTimeout(() => {
+            window.store.set({ popupErrorText: '' });
+        }, 2000);
     } finally {
         window.store.set({ isLoading: false });
     }

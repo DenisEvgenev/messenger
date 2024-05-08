@@ -43,3 +43,21 @@ export type ChatDTO = {
     unread_count: number,
     last_message: LastMessage | null
 }
+
+export type UserData = {
+    first_name: string;
+    second_name: string;
+    display_name: string;
+    login: string;
+    email: string;
+    phone: string;
+}
+
+export type UserPassword = {
+    oldPassword: string;
+    newPassword: string;
+}
+
+export type UserLogin = {
+    login: string;
+}

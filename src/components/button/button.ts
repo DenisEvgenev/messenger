@@ -2,6 +2,7 @@ import { Icon } from 'components/icon';
 import Block from 'core/Block';
 
 export type ButtonProps = {
+    className?: string;
     label: string;
     page?: string;
     type: string;
@@ -49,7 +50,7 @@ export default class Button extends Block<ButtonProps> {
         return `
             <button 
                 type={{type}}        
-                class="button button__{{type}} button__{{classname}} {{arrow}}"
+                class="button button__{{type}} button__{{className}} {{arrow}}"
             >
                 {{#if icon}}{{{IconButton}}}{{/if}}
                 {{label}}
