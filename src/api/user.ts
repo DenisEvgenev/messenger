@@ -19,6 +19,6 @@ export default class UserApi {
     }
 
     async searchUser(data: UserLogin): Promise<XMLHttpRequest> {
-        return userApi.get('/search', { data });
+        return userApi.post('/search', { data });
     }
 }

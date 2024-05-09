@@ -12,7 +12,7 @@ type Props = {
     countUnreadedMessages: number;
 }
 
-export default class MainPanelChat extends Block<Props> {
+class MainPanelChat extends Block<Props> {
     constructor(props: Props) {
         super({
             ...props,
@@ -42,3 +42,5 @@ export default class MainPanelChat extends Block<Props> {
         `);
     }
 }
+
+export default MainPanelChat;

@@ -22,7 +22,7 @@ export type CreateUser = Omit<UserDTO, 'avatar' | 'display_name' | 'id'> & {
 }
 
 export type CreateChat = {
-    title: string
+    title?: string
 }
 
 export type LoginRequestData = {
@@ -37,11 +37,12 @@ type LastMessage = {
 }
 
 export type ChatDTO = {
-    id: number,
-    title: string,
-    avatar: string | null,
-    unread_count: number,
-    last_message: LastMessage | null
+    id: number;
+    created_by: number;
+    title: string;
+    avatar: string | null;
+    unread_count: number;
+    last_message: LastMessage | null;
 }
 
 export type UserData = {
@@ -60,4 +61,9 @@ export type UserPassword = {
 
 export type UserLogin = {
     login: string;
+}
+
+export type ChatUsers = {
+    chatId: number;
+    users: Array<number>;
 }

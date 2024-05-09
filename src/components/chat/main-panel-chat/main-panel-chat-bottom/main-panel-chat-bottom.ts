@@ -66,7 +66,6 @@ export default class MainPanelChatBottom extends Block<Props> {
     }
 
     onSendMessage() {
-        console.log('===== message ====', this.props.message);
     }
 
     render(): string {

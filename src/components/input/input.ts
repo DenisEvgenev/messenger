@@ -3,7 +3,7 @@ import Block from 'core/Block';
 export type Props = {
     type: string;
     events: {
-        blur: () => void;
+        blur: (event: Event) => void;
     },
     className?: string;
     name: string;

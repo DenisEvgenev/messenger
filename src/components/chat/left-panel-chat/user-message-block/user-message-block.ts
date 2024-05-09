@@ -1,12 +1,37 @@
 import { Photo } from 'components/photo';
 import Block from 'core/Block';
+import { setActiveCard } from 'services/setActiveCard';
 
 type Props = {
-    avatar: string;
+    avatar: string | null;
+    groupName: string;
+    isYourLastMessage: boolean;
+    lastMessage: string;
+    time: string;
+    countUnreadedMessages: number;
+    id: number;
+    isChoosen?: boolean;
+    activeId: number | null;
+    events?: {
+        click: () => void;
+    }
 }
 export default class UserMessageBlock extends Block<Props> {
     constructor(props: Props) {
-        super({ ...props });
+        super({
+            ...props,
+            isChoosen: props.activeId === props.id,
+            events: {
+                click: () => {
+                    const card = {
+                        id: props.id,
+                        avatar: props.avatar,
+                        title: props.groupName,
+                    };
+                    setActiveCard(card);
+                },
+            },
+        });
     }
 
     init() {
@@ -24,7 +49,7 @@ export default class UserMessageBlock extends Block<Props> {
             <div class="user-message-block {{#if isChoosen}}user-message-block__choosen{{/if}}">
                 {{{ Avatar }}}
                 <div class="user-message-block__column-middle">
-                    <p class="user-message-block__user-name">{{ userName }}</p>
+                    <p class="user-message-block__user-name">{{ groupName }}</p>
                     <div class="user-message-block__last-message">
                         {{#if isYourLastMessage}}
                             <p class="user-message-block__last-message-black">Вы:</p>

@@ -1,6 +1,5 @@
 import {
-    FormEdit, FormEditPhoto, LeftPanel, Photo,
-    PopupError,
+    FormEdit, FormModal, LeftPanel, Photo, PopupError,
 } from 'components';
 import Block from 'core/Block';
 import emptyPhoto from 'assets/empty.png';
@@ -21,11 +20,12 @@ type Props = {
 
 class ProfileEditPage extends Block<Props> {
     init() {
-        const EditPhotoBlock = new FormEditPhoto({
+        const EditPhotoBlock = new FormModal({
+            formBody: 'Картинка: <input id="avatar" type="file" name="avatar" accept="image/*">',
             onSubmit: (e: Event) => {
                 e.preventDefault();
-                const myUserForm = document.getElementById('myUserForm') as HTMLFormElement;
-                const formData = new FormData(myUserForm);
+                const formModal = document.getElementById('form-modal') as HTMLFormElement;
+                const formData = new FormData(formModal);
                 changeAvatar(formData);
             },
         });

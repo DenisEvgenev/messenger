@@ -7,6 +7,7 @@
   padding: 12px 0;
   border-radius: 8px;
   cursor: pointer;
+  color: var(--text-color);
 
   &__submit {
     background-color: var(--main-color);
@@ -53,5 +54,14 @@
   &__main {
     width: 350px;
     margin: auto;
+  }
+
+  &__add-chat {
+    width: 250px;
+    margin: auto;
+
+    &:hover {
+      color: var(--text-secondary-color);
+    }
   }
 }

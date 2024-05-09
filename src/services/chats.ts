@@ -1,15 +1,13 @@
-import {
-    UserData, UserDTO, UserLogin, UserPassword,
-} from 'api/types';
-import UserApi from 'api/user';
+import ChatsApi from 'api/chats';
+import { ChatUsers, CreateChat } from 'api/types';
 
-const userApi = new UserApi();
+const chatsApi = new ChatsApi();
 
-export const changeProfile = async (model: UserData) => {
+export const getChats = async () => {
     window.store.set({ isLoading: true });
     try {
-        await userApi.changeProfile(model);
-        window.router.go('/settings');
+        const { response } = await chatsApi.getChats();
+        window.store.set({ chats: JSON.parse(response) });
     } catch (error) {
         const { reason } = JSON.parse(error);
         window.store.set({ popupErrorText: reason });
@@ -21,11 +19,10 @@ export const changeProfile = async (model: UserData) => {
     }
 };
 
-export const changePassword = async (model: UserPassword): Promise<object | void> => {
+export const createChat = async (data: CreateChat): Promise<object | void> => {
     window.store.set({ isLoading: true });
     try {
-        await userApi.changePassword(model);
-        window.router.go('/settings');
+        await chatsApi.createChat(data);
     } catch (error) {
         const { reason } = JSON.parse(error);
         window.store.set({ popupErrorText: reason });
@@ -37,11 +34,10 @@ export const changePassword = async (model: UserPassword): Promise<object | void
     }
 };
 
-export const changeAvatar = async (model: FormData) => {
+export const addUsers = async (data: ChatUsers): Promise<object | void> => {
     window.store.set({ isLoading: true });
     try {
-        await userApi.changeAvatar(model);
-        window.router.go('/profile-edit');
+        await chatsApi.addUsers(data);
     } catch (error) {
         const { reason } = JSON.parse(error);
         window.store.set({ popupErrorText: reason });
@@ -53,18 +49,16 @@ export const changeAvatar = async (model: FormData) => {
     }
 };
 
-export const searchUser = async (model: UserLogin): Promise<Array<UserDTO> | void> => {
+export const removeUsers = async (data: ChatUsers): Promise<object | void> => {
     window.store.set({ isLoading: true });
     try {
-        const { response } = await userApi.searchUser(model);
-        return JSON.parse(response);
+        await chatsApi.removeUsers(data);
     } catch (error) {
         const { reason } = JSON.parse(error);
         window.store.set({ popupErrorText: reason });
         setTimeout(() => {
             window.store.set({ popupErrorText: '' });
         }, 2000);
-        return reason;
     } finally {
         window.store.set({ isLoading: false });
     }

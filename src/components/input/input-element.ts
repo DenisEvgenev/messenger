@@ -5,7 +5,7 @@ import Input from './input';
 export type InputProps = {
     type: 'password' | 'text' | 'email' | 'tel';
     label: string;
-    onBlur?: () => void;
+    onBlur?: (event: Event) => void;
     error?: string;
     className?: string;
     name: string;

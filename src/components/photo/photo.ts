@@ -1,9 +1,10 @@
 import Block from 'core/Block';
+import emptyPhoto from 'assets/empty.png';
 
 const REGEXP_IMAGE_NAME = /[^/]*_([^/.]+)\.\w+$/;
 
 type Props = {
-    avatar: string;
+    avatar: string | null;
     imageName?: string;
     srcAvatar?: string;
     events?: {
@@ -20,6 +21,7 @@ export default class Photo extends Block<Props> {
         super({
             ...props,
             imageName: imageName ?? 'Empty image',
+            avatar: props.avatar || emptyPhoto,
         });
     }
 
