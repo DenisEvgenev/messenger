@@ -18,7 +18,7 @@ window.router = router;
 const store = new Store({
     isLoading: false,
     loginError: null,
-    cats: [],
+    messages: [],
     user: null,
     selectedCard: null,
 });

@@ -9,7 +9,7 @@ export { FormEditPassword } from './form-edit-password';
 export { FormEditPhoto } from './form-edit-photo';
 export { FormModal } from './form-modal';
 export { FormGroup } from './form-group';
-export { ListChats } from './list-chats';
+export { ListElements } from './list-elements';
 export { FormWrapper } from './form-wrapper';
 export { Input } from './input';
 export { Title } from './title';

@@ -34,7 +34,7 @@ class MainPanelChatTop extends Block<Props> {
         const Avatar = new Photo({ avatar: this.props.selectedChat?.avatar });
         const AddUser = new Icon({
             src: AddUserIcon,
-            size: 'xs',
+            size: 's',
             events: {
                 click: () => this.children.AddingUsersBlock.setProps({ showModal: true }),
             },
@@ -42,7 +42,7 @@ class MainPanelChatTop extends Block<Props> {
 
         const RemoveUser = new Icon({
             src: RemoveUserIcon,
-            size: 'xs',
+            size: 's',
             events: {
                 click: () => this.children.RemovingUsersBlock.setProps({ showModal: true }),
             },
@@ -50,7 +50,7 @@ class MainPanelChatTop extends Block<Props> {
         const AddingUsersBlock = new FormModal({
             formBody: new Input({
                 type: 'text',
-                label: 'Введите логин пользователя для добавления',
+                label: 'Логин',
                 onBlur: (event) => {
                     const target = event.target as HTMLInputElement;
                     const inputValue = target.value;
@@ -58,6 +58,7 @@ class MainPanelChatTop extends Block<Props> {
                 },
                 name: 'title',
             }),
+            title: 'Добавить пользователя',
             onSubmit: async (e: Event) => {
                 e.preventDefault();
 
@@ -71,13 +72,15 @@ class MainPanelChatTop extends Block<Props> {
                     chatId: this.props.selectedChat.id,
                     users: [user[0].id],
                 });
+
+                this.children.AddingUsersBlock.setProps({ showModal: false });
             },
         });
 
         const RemovingUsersBlock = new FormModal({
             formBody: new Input({
                 type: 'text',
-                label: 'Введите логин пользователя для удаления',
+                label: 'Логин',
                 onBlur: (event) => {
                     const target = event.target as HTMLInputElement;
                     const inputValue = target.value;
@@ -85,6 +88,7 @@ class MainPanelChatTop extends Block<Props> {
                 },
                 name: 'title',
             }),
+            title: 'Удалить пользователя',
             onSubmit: async (e: Event) => {
                 e.preventDefault();
 
@@ -98,6 +102,8 @@ class MainPanelChatTop extends Block<Props> {
                     chatId: this.props.selectedChat.id,
                     users: [user[0].id],
                 });
+
+                this.children.RemovingUsersBlock.setProps({ showModal: false });
             },
         });
 

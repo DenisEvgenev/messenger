@@ -19,4 +19,8 @@ export default class ChatsApi {
     async removeUsers(data: ChatUsers): Promise<XMLHttpRequest> {
         return chatsApi.delete('/users', { data });
     }
+
+    async getToken(chatId: number): Promise<XMLHttpRequest> {
+        return chatsApi.post(`/token/${chatId}`);
+    }
 }

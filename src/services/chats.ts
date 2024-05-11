@@ -63,3 +63,20 @@ export const removeUsers = async (data: ChatUsers): Promise<object | void> => {
         window.store.set({ isLoading: false });
     }
 };
+
+export const getToken = async (chatId: number) => {
+    window.store.set({ isLoading: true });
+    try {
+        const { response } = await chatsApi.getToken(chatId);
+        return JSON.parse(response);
+    } catch (error) {
+        const { reason } = JSON.parse(error);
+        window.store.set({ popupErrorText: reason });
+        setTimeout(() => {
+            window.store.set({ popupErrorText: '' });
+        }, 2000);
+        return null;
+    } finally {
+        window.store.set({ isLoading: false });
+    }
+};

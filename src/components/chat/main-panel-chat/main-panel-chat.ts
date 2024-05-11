@@ -4,12 +4,13 @@ import { MainPanelChatBottom } from './main-panel-chat-bottom';
 import { MainPanelChatMiddle } from './main-panel-chat-middle';
 
 type Props = {
-    userName: string;
-    avatar: string;
-    lastMessage: string;
-    isYourLastMessage: boolean;
-    time: string;
-    countUnreadedMessages: number;
+    userName?: string;
+    avatar?: string;
+    lastMessage?: string;
+    isYourLastMessage?: boolean;
+    time?: string;
+    countUnreadedMessages?: number;
+    message?: string;
 }
 
 class MainPanelChat extends Block<Props> {

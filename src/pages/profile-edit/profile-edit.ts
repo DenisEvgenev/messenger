@@ -27,6 +27,7 @@ class ProfileEditPage extends Block<Props> {
                 const formModal = document.getElementById('form-modal') as HTMLFormElement;
                 const formData = new FormData(formModal);
                 changeAvatar(formData);
+                EditPhotoBlock.setProps({ showModal: false });
             },
         });
 

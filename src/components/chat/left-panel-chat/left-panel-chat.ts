@@ -2,12 +2,13 @@ import { Button } from 'components/button';
 import Block from 'core/Block';
 import { connect } from 'utils/connect';
 import { ChatDTO, UserDTO } from 'api/types';
-import { ListChats } from 'components/list-chats';
+import { ListElements } from 'components/list-elements';
 import { FormModal } from 'components/form-modal';
-import { createChat } from 'services/chats';
+import { createChat, getChats } from 'services/chats';
 import { Input } from 'components/input';
 import isEqual from 'utils/isEqual';
 import { SelectedChat } from 'services/setActiveCard';
+import getNormalFormatTime from 'utils/getNormalFormatTime';
 import { UserMessageBlock } from './user-message-block';
 
 type Props = {
@@ -20,29 +21,15 @@ type Props = {
 
 class LeftPanelChat extends Block<Props> {
     mapChatCardToComponent(chatCards: Array<ChatDTO>, activeId: number | null) {
-        const lastMessage = {
-            user: {
-                first_name: 'Petya',
-                second_name: 'Pupkin',
-                avatar: '/path/to/avatar.jpg',
-                email: 'my@email.com',
-                login: 'userLogin',
-                phone: '8(911)-222-33-22',
-            },
-            time: '2020-01-02T14:22:22.000Z',
-            content: 'this is message content',
-        };
-
         return chatCards?.map((data) =>
             new UserMessageBlock({
                 id: data.id,
                 avatar: data.avatar,
                 groupName: data.title,
-                isYourLastMessage: this.props.userData?.login === lastMessage.user.login,
-                lastMessage: lastMessage.content,
-                time: `${new Date(lastMessage.time).getHours().toString().padStart(2, '0')}:`
-                + `${new Date(lastMessage.time).getMinutes().toString().padStart(2, '0')}`,
-                countUnreadedMessages: 1,
+                isYourLastMessage: this.props.userData?.login === data.last_message?.user.login,
+                lastMessage: data.last_message?.content,
+                time: getNormalFormatTime(data.last_message?.time),
+                countUnreadedMessages: data.unread_count,
                 activeId,
             }));
     }
@@ -67,9 +54,20 @@ class LeftPanelChat extends Block<Props> {
                 },
                 name: 'title',
             }),
-            onSubmit: (e: Event) => {
+            onSubmit: async (e: Event) => {
                 e.preventDefault();
-                createChat({ title: this.props.chatTitleField });
+
+                const focusableElements = document.querySelectorAll('input');
+
+                focusableElements.forEach((element) => {
+                    element.blur();
+                });
+
+                if (this.props.chatTitleField) {
+                    await createChat({ title: this.props.chatTitleField });
+                    getChats();
+                    this.children.AddingChatBlock.setProps({ showModal: false });
+                }
             },
         });
 
@@ -81,23 +79,26 @@ class LeftPanelChat extends Block<Props> {
             },
         });
 
-        const ListChatsBlock = new ListChats(
-            { chats: this.mapChatCardToComponent(this.props.chats, null) || [] },
+        const ListChats = new ListElements(
+            { elements: this.mapChatCardToComponent(this.props.chats, null) || [] },
         );
 
         this.children = {
             ...this.children,
             ButtonProfile,
             AddingChatBlock,
-            ListChatsBlock,
+            ListChats,
             ButtonAddingChat,
         };
     }
 
     componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
         if (!isEqual(oldProps, newProps)) {
-            this.children.ListChatsBlock.setProps({
-                chats: this.mapChatCardToComponent(newProps.chats, newProps.selectedChat?.id) || [],
+            this.children.ListChats.setProps({
+                elements: this.mapChatCardToComponent(
+                    newProps.chats,
+                    newProps.selectedChat?.id,
+                ) || [],
                 showEmpty: newProps.chats?.length === 0,
             });
         }
@@ -111,7 +112,7 @@ class LeftPanelChat extends Block<Props> {
                 {{{ ButtonProfile }}}
                 {{{ ButtonAddingChat }}}
                 {{{ AddingChatBlock }}}
-                {{{ ListChatsBlock }}}
+                {{{ ListChats }}}
             </div>
         `);
     }

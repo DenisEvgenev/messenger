@@ -1,12 +1,13 @@
 import { Photo } from 'components/photo';
 import Block from 'core/Block';
+import { closeCurrentWebSocket } from 'core/WSTransport';
 import { setActiveCard } from 'services/setActiveCard';
 
 type Props = {
     avatar: string | null;
     groupName: string;
     isYourLastMessage: boolean;
-    lastMessage: string;
+    lastMessage?: string;
     time: string;
     countUnreadedMessages: number;
     id: number;
@@ -29,6 +30,7 @@ export default class UserMessageBlock extends Block<Props> {
                         title: props.groupName,
                     };
                     setActiveCard(card);
+                    closeCurrentWebSocket();
                 },
             },
         });

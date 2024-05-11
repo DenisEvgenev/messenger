@@ -10,6 +10,7 @@ type Props = {
     onSubmit?: (e: Event) => void;
     showModal?: boolean;
     formBody?: string | Block<object>;
+    title?: string;
 }
 
 class FormModal extends Block<Props> {
@@ -45,6 +46,7 @@ class FormModal extends Block<Props> {
             `
             <div class="form-modal {{#if showModal}}form-modal__show{{/if}}">
                 <div class="form-modal__container">
+                    <p class="form-modal_title">{{ title }}</p>
                     <form id="form-modal" class="form-modal__form">
                         {{{ formBody }}}
                         {{{ ButtonSave }}}

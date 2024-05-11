@@ -1,4 +1,6 @@
 .icon {
+  cursor: pointer;
+  
   &_l {
     width: 32px;
     height: 32px;
@@ -7,6 +9,11 @@
   &__m {
     width: 28px;
     height: 28px;
+  }
+
+  &_s {
+    width: 20px;
+    height: 20px;
   }
 
   &__xs {
