@@ -19,7 +19,8 @@ const store = new Store({
     isLoading: false,
     loginError: null,
     messages: [],
-    user: null,
+    chats: [],
+    userData: {},
     selectedCard: null,
 });
 
