@@ -95,7 +95,7 @@ class FormProfile extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (oldProps === newProps) {
             return false;
         }

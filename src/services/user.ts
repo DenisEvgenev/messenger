@@ -40,14 +40,15 @@ export const changePassword = async (model: UserPassword): Promise<object | void
 export const changeAvatar = async (model: FormData) => {
     window.store.set({ isLoading: true });
     try {
-        await userApi.changeAvatar(model);
-        window.router.go('/profile-edit');
+        const { response } = await userApi.changeAvatar(model);
+        return JSON.parse(response);
     } catch (error) {
         const { reason } = JSON.parse(error);
         window.store.set({ popupErrorText: reason });
         setTimeout(() => {
             window.store.set({ popupErrorText: '' });
         }, 2000);
+        return null;
     } finally {
         window.store.set({ isLoading: false });
     }

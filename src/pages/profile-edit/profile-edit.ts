@@ -2,7 +2,6 @@ import {
     FormEdit, FormModal, LeftPanel, Photo, PopupError,
 } from 'components';
 import Block from 'core/Block';
-import emptyPhoto from 'assets/empty.png';
 import { connect } from 'utils/connect';
 import { changeAvatar, changeProfile } from 'services/user';
 import { UserDTO } from 'api/types';
@@ -21,12 +20,18 @@ type Props = {
 class ProfileEditPage extends Block<Props> {
     init() {
         const EditPhotoBlock = new FormModal({
+            id: 'change-user-avatar',
             formBody: 'Картинка: <input id="avatar" type="file" name="avatar" accept="image/*">',
-            onSubmit: (e: Event) => {
+            onSubmit: async (e: Event) => {
                 e.preventDefault();
-                const formModal = document.getElementById('form-modal') as HTMLFormElement;
+                const formModal = document.getElementById(
+                    'form-modal__change-user-avatar',
+                ) as HTMLFormElement;
                 const formData = new FormData(formModal);
-                changeAvatar(formData);
+                const { avatar } = await changeAvatar(formData);
+                this.children.PhotoBlock.setProps({
+                    avatar,
+                });
                 EditPhotoBlock.setProps({ showModal: false });
             },
         });
@@ -66,7 +71,7 @@ class ProfileEditPage extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (oldProps === newProps) {
             return false;
         }
@@ -99,9 +104,7 @@ const mapStateToProps = ({
     emailField,
     phoneField,
 }: Props) => ({
-    avatar: userData?.avatar
-        ? `https://ya-praktikum.tech/api/v2/resources${userData?.avatar}`
-        : emptyPhoto,
+    avatar: userData?.avatar,
     firstNameField: firstNameField ?? userData?.first_name,
     secondNameField: secondNameField ?? userData?.second_name,
     displayNameField: displayNameField ?? userData?.display_name,

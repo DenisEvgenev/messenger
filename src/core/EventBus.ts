@@ -28,7 +28,7 @@ export default class EventBus<E extends Values> {
         this.listeners[event] = eventListeners.filter((listener) => listener !== callback);
     }
 
-    emit<F extends(...args: any) => void>(event: E, ...args: Parameters<F>): void {
+    emit<F extends(...args: unknown[]) => void>(event: E, ...args: Parameters<F>): void {
         const eventListeners = this.listeners[event];
         if (!eventListeners) {
             return;

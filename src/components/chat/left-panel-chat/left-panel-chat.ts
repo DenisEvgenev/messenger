@@ -92,7 +92,7 @@ class LeftPanelChat extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (!isEqual(oldProps, newProps)) {
             this.children.ListChats.setProps({
                 elements: this.mapChatCardToComponent(

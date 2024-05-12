@@ -25,6 +25,10 @@ export type CreateChat = {
     title?: string
 }
 
+export type DeleteChat = {
+    chatId: number;
+}
+
 export type LoginRequestData = {
     login: string,
     password: string
@@ -67,6 +71,8 @@ export type ChatUsers = {
     chatId: number;
     users: Array<number>;
 }
+
+export type UserId = number;
 
 export type Message = {
     id: number;

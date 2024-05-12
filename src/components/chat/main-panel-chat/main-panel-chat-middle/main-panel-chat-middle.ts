@@ -19,6 +19,7 @@ type Props = {
     userData?: UserDTO;
     messages: Messages;
     chatActive?: boolean;
+    messageCount?: string;
 }
 
 class MainPanelChatMiddle extends Block<Props> {
@@ -46,19 +47,22 @@ class MainPanelChatMiddle extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (isEqual(oldProps, newProps)) {
             return false;
         }
 
-        if (newProps.messages) {
+        if (!isEqual(oldProps.messages, newProps.messages)) {
             this.children.ListMessages.setProps({
-                elements: this.mapChatMessagesToComponent(newProps.messages),
+                elements: this.mapChatMessagesToComponent(
+                    [...oldProps.messages, ...newProps.messages],
+                ),
                 showEmpty: newProps.messages.length,
             });
         }
 
-        if (newProps.selectedChat && newProps.userData && !newProps.chatActive) {
+        if (newProps.selectedChat && oldProps.selectedChat !== newProps.selectedChat
+            && newProps.userData && !newProps.chatActive) {
             createWebSocket(newProps.selectedChat.id, newProps.userData.id);
         }
         return true;
@@ -66,7 +70,7 @@ class MainPanelChatMiddle extends Block<Props> {
 
     render(): string {
         return (`
-            <div class="main-panel-chat-middle">
+            <div id="messages" class="main-panel-chat-middle">
                 {{{ ListMessages }}}
             </div>
         `);

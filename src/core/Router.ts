@@ -32,7 +32,8 @@ class Router {
         return Router.instance;
     }
 
-    use(pathname: string, block: new (...args: any[]) => Block<object>, middlewares: Middlewares) {
+    use(pathname: string, block: new (...args: unknown[]) =>
+        Block<object>, middlewares: Middlewares) {
         const route = new Route(pathname, block, { rootQuery: this.rootQuery }, middlewares);
         this.routes.push(route);
         return this;

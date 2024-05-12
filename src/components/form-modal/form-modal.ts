@@ -11,6 +11,9 @@ type Props = {
     showModal?: boolean;
     formBody?: string | Block<object>;
     title?: string;
+    id?: string;
+    label?: string;
+    users?: string;
 }
 
 class FormModal extends Block<Props> {
@@ -25,7 +28,7 @@ class FormModal extends Block<Props> {
 
     init() {
         const ButtonSave = new Button({
-            label: 'Сохранить',
+            label: this.props.label ?? 'Сохранить',
             type: 'submit',
         });
         const ButtonCancel = new Button({
@@ -47,7 +50,11 @@ class FormModal extends Block<Props> {
             <div class="form-modal {{#if showModal}}form-modal__show{{/if}}">
                 <div class="form-modal__container">
                     <p class="form-modal_title">{{ title }}</p>
-                    <form id="form-modal" class="form-modal__form">
+                    {{#if users}}
+                        <div>В чате есть следующие пользователи:</div>
+                        <div><b>{{ users }}</b></div>
+                    {{/if}}
+                    <form id="form-modal__{{ id }}" class="form-modal__form">
                         {{{ formBody }}}
                         {{{ ButtonSave }}}
                     </form>

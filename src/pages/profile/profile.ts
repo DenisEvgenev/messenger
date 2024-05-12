@@ -1,6 +1,5 @@
 import { FormProfile, LeftPanel, Photo } from 'components';
 import Block from 'core/Block';
-import emptyPhoto from 'assets/empty.png';
 import { connect } from 'utils/connect';
 import { UserDTO } from 'api/types';
 
@@ -25,7 +24,7 @@ class ProfilePage extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (oldProps === newProps) {
             return false;
         }
@@ -52,9 +51,7 @@ const mapStateToProps = ({ userData, isLoading }:
     ({
         userData,
         isLoading,
-        avatar: userData?.avatar
-            ? `https://ya-praktikum.tech/api/v2/resources${userData?.avatar}`
-            : emptyPhoto,
+        avatar: userData?.avatar,
     });
 
 export default connect(mapStateToProps)(ProfilePage);

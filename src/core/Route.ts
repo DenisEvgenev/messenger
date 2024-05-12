@@ -4,7 +4,7 @@ type Props = {
     rootQuery: string;
 }
 
-type BlockClass = new (...args: any[]) => Block<object>;
+type BlockClass = new (...args: unknown[]) => Block<object>;
 
 export type Middlewares = {
     [key: string]: () => void;
@@ -50,7 +50,7 @@ class Route {
         return pathname === this.pathname;
     }
 
-    renderDOM(query: string, block: Block<any>) {
+    renderDOM(query: string, block: Block<object>) {
         const root = document.querySelector(query) as Element;
         const content = block.getContent() as HTMLElement;
         root.append(content);

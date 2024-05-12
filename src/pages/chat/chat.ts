@@ -1,4 +1,4 @@
-import { Chat } from 'components';
+import { Chat, PopupError } from 'components';
 import Block from 'core/Block';
 
 export default class ChatPage extends Block<object> {
@@ -6,12 +6,14 @@ export default class ChatPage extends Block<object> {
         super({
             ...props,
             Chat: new Chat(),
+            PopupError: new PopupError({}),
         });
     }
 
     render() {
         return `
             <div>
+                {{{ PopupError }}}
                 {{{ Chat }}}
             </div>
         `;

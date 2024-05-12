@@ -23,17 +23,18 @@ class ListElements extends Block<Props> {
         });
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (isEqual(oldProps, newProps)) {
             return false;
         }
+
         this.props.showEmpty = newProps.elements.length === 0;
         return true;
     }
 
     render(): string {
         return `
-        <div>
+        <div id="list-elements">
             {{#if showEmpty}}
                 <div class="{{ className }}">Выберите чат чтобы отправить сообщение</div>
             {{/if}}

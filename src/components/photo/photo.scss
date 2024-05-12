@@ -1,11 +1,11 @@
 .image {
   width: 47px;
   height: 47px;
+  border-radius: 50%;
 
   &__main {
     width: 130px;
     height: 130px;
-    border-radius: 50%;
   }
 
   &__top {

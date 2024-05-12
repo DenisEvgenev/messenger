@@ -19,6 +19,12 @@ export const sendMessage = (message: string) => {
     }
 };
 
+export const getOldMessages = (count: string) => {
+    if (currentSocket) {
+        currentSocket.send(JSON.stringify({ type: 'get old', content: count }));
+    }
+};
+
 export const createWebSocket = async (chatid: number, userId: number) => {
     const { token } = await getToken(chatid);
     const socket = new WebSocket(
@@ -40,6 +46,9 @@ export const createWebSocket = async (chatid: number, userId: number) => {
         }
         if (Array.isArray(data)) {
             window.store.set({ messages: data });
+            if (data.length === 20) {
+                getOldMessages(data[data.length - 1].id);
+            }
         } else {
             const state = window.store.getState() as { messages: Messages };
             window.store.set({ messages: [data, ...state.messages] });

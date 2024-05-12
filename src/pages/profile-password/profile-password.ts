@@ -2,7 +2,6 @@ import {
     FormEditPassword, LeftPanel, Photo, PopupError,
 } from 'components';
 import Block from 'core/Block';
-import emptyPhoto from 'assets/empty.png';
 import { connect } from 'utils/connect';
 import { changePassword } from 'services/user';
 import { UserDTO } from 'api/types';
@@ -38,7 +37,7 @@ class ProfileEditPage extends Block<Props> {
         };
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
         if (oldProps === newProps) {
             return false;
         }
@@ -68,8 +67,6 @@ const mapStateToProps = ({
 }: Props) => ({
     oldPasswordField,
     newPasswordField,
-    avatar: userData?.avatar
-        ? `https://ya-praktikum.tech/api/v2/resources${userData?.avatar}`
-        : emptyPhoto,
+    avatar: userData?.avatar,
 });
 export default connect(mapStateToProps)(ProfileEditPage);

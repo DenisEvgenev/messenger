@@ -102,7 +102,7 @@ export default class Block<Props extends object> {
         this._render();
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): { [x: string]: any; } | boolean {
+    componentDidUpdate(oldProps: Props, newProps: Props): unknown | boolean {
         return { ...oldProps, ...newProps };
     }
 

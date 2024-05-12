@@ -31,7 +31,7 @@ export default class FormGroup extends Block<Group> {
         };
     }
 
-    componentDidUpdate(oldProps: Group, newProps: Group): boolean | { [x: string]: any; } {
+    componentDidUpdate(oldProps: Group, newProps: Group): boolean | { [x: string]: unknown; } {
         if (oldProps === newProps) {
             return false;
         }

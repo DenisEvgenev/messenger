@@ -27,7 +27,7 @@ const store = new Store({
 window.store = store;
 
 Object.entries(Components).forEach(([name, component]) => {
-    const template = component as unknown as Handlebars.Template<any>;
+    const template = component as unknown as Handlebars.Template<unknown>;
     Handlebars.registerPartial(name, template);
 });
 
