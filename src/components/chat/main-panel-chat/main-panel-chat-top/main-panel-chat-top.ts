@@ -14,6 +14,7 @@ import {
 } from 'services/chats';
 import { searchUser } from 'services/user';
 import { UserDTO } from 'api/types';
+import { REGEXP_LOGIN } from 'constants/constants';
 
 type Props = {
     title: string;
@@ -50,26 +51,37 @@ class MainPanelChatTop extends Block<Props> {
                 const chatId = this.props.selectedChat.id;
                 formData.append('chatId', chatId.toString());
                 const response = await changeChatAvatar(formData);
+
                 if (!response.isError) {
                     EditPhotoBlock.setProps({ showModal: false });
                     this.children.Avatar.setProps({
                         avatar: response.avatar,
                     });
+                    getChats();
                 }
             },
         });
 
         const Avatar = new Photo({
             avatar: this.props.selectedChat?.avatar,
+            className: 'edit',
             events: {
-                click: () => EditPhotoBlock.setProps({ showModal: true }),
+                click: () => {
+                    if (this.props.selectedChat) {
+                        EditPhotoBlock.setProps({ showModal: true });
+                    }
+                },
             },
         });
         const AddUser = new Icon({
             src: AddUserIcon,
             size: 's',
             events: {
-                click: () => this.children.AddingUsersBlock.setProps({ showModal: true }),
+                click: () => {
+                    if (this.props.selectedChat) {
+                        this.children.AddingUsersBlock.setProps({ showModal: true });
+                    }
+                },
             },
         });
 
@@ -78,15 +90,18 @@ class MainPanelChatTop extends Block<Props> {
             size: 's',
             events: {
                 click: async () => {
-                    const users: Array<UserDTO> = await getChatUsers(this.props.selectedChat.id)
-                    || [];
+                    if (this.props.selectedChat) {
+                        const users = await getChatUsers(
+                            this.props.selectedChat.id,
+                        ) as Array<UserDTO> || [];
 
-                    this.children.RemovingUsersBlock.setProps({
-                        showModal: true,
-                        users: users
-                            .filter((user) => user.id !== this.props.userData?.id)
-                            .map(({ login }) => login).join(', '),
-                    });
+                        this.children.RemovingUsersBlock.setProps({
+                            showModal: true,
+                            users: users
+                                .filter((user) => user.id !== this.props.userData?.id)
+                                .map(({ login }) => login).join(', '),
+                        });
+                    }
                 },
             },
         });
@@ -98,6 +113,18 @@ class MainPanelChatTop extends Block<Props> {
                     const target = event.target as HTMLInputElement;
                     const inputValue = target.value;
                     window.store.set({ loginUser: inputValue });
+
+                    if (REGEXP_LOGIN.test(this.props.loginUser)) {
+                        this.children.AddingUsersBlock.children.formBody.setProps({
+                            error: false,
+                            errorText: null,
+                        });
+                    } else {
+                        this.children.AddingUsersBlock.children.formBody.setProps({
+                            error: true,
+                            errorText: 'Используйте только буквы, начиная с заглавной',
+                        });
+                    }
                 },
                 name: 'title',
             }),
@@ -105,18 +132,32 @@ class MainPanelChatTop extends Block<Props> {
             onSubmit: async (e: Event) => {
                 e.preventDefault();
 
-                const user = await searchUser({ login: this.props.loginUser });
+                const focusableElements = document.querySelectorAll('input');
 
-                if (!user || !this.props.selectedChat) {
-                    return;
-                }
-
-                addUsers({
-                    chatId: this.props.selectedChat.id,
-                    users: [user[0].id],
+                focusableElements.forEach((element) => {
+                    element.blur();
                 });
 
-                this.children.AddingUsersBlock.setProps({ showModal: false });
+                if (REGEXP_LOGIN.test(this.props.loginUser)) {
+                    const user = await searchUser({
+                        login: this.props.loginUser,
+                    });
+
+                    if (!user?.length || !this.props.selectedChat) {
+                        this.children.AddingUsersBlock.children.formBody.setProps({
+                            error: true,
+                            errorText: 'Такой логин не существует',
+                        });
+                        return;
+                    }
+
+                    addUsers({
+                        chatId: this.props.selectedChat.id,
+                        users: [user[0].id],
+                    });
+
+                    this.children.AddingUsersBlock.setProps({ showModal: false });
+                }
             },
         });
 
@@ -128,6 +169,18 @@ class MainPanelChatTop extends Block<Props> {
                     const target = event.target as HTMLInputElement;
                     const inputValue = target.value;
                     window.store.set({ loginUser: inputValue });
+
+                    if (REGEXP_LOGIN.test(this.props.loginUser)) {
+                        this.children.RemovingUsersBlock.children.formBody.setProps({
+                            error: false,
+                            errorText: null,
+                        });
+                    } else {
+                        this.children.RemovingUsersBlock.children.formBody.setProps({
+                            error: true,
+                            errorText: 'Используйте только буквы, начиная с заглавной',
+                        });
+                    }
                 },
                 name: 'title',
             }),
@@ -136,18 +189,32 @@ class MainPanelChatTop extends Block<Props> {
             onSubmit: async (e: Event) => {
                 e.preventDefault();
 
-                const user = await searchUser({ login: this.props.loginUser });
+                const focusableElements = document.querySelectorAll('input');
 
-                if (!user || !this.props.selectedChat) {
-                    return;
-                }
-
-                removeUsers({
-                    chatId: this.props.selectedChat.id,
-                    users: [user[0].id],
+                focusableElements.forEach((element) => {
+                    element.blur();
                 });
 
-                this.children.RemovingUsersBlock.setProps({ showModal: false });
+                if (REGEXP_LOGIN.test(this.props.loginUser)) {
+                    const user = await searchUser({
+                        login: this.props.loginUser,
+                    });
+
+                    if (!user?.length || !this.props.selectedChat) {
+                        this.children.RemovingUsersBlock.children.formBody.setProps({
+                            error: true,
+                            errorText: 'Такой логин не существует',
+                        });
+                        return;
+                    }
+
+                    removeUsers({
+                        chatId: this.props.selectedChat.id,
+                        users: [user[0].id],
+                    });
+
+                    this.children.RemovingUsersBlock.setProps({ showModal: false });
+                }
             },
         });
 
@@ -167,7 +234,11 @@ class MainPanelChatTop extends Block<Props> {
             src: DeleteChatIcon,
             size: 's',
             events: {
-                click: () => this.children.DeletingChatBlock.setProps({ showModal: true }),
+                click: () => {
+                    if (this.props.selectedChat) {
+                        this.children.DeletingChatBlock.setProps({ showModal: true });
+                    }
+                },
             },
         });
 

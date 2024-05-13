@@ -23,6 +23,8 @@ type Props = {
 }
 
 class MainPanelChatMiddle extends Block<Props> {
+    private messages: Messages = [];
+
     mapChatMessagesToComponent(messages: Messages) {
         return messages?.map(({ content, time, user_id: userId }) =>
             new Message({
@@ -52,11 +54,21 @@ class MainPanelChatMiddle extends Block<Props> {
             return false;
         }
 
+        if (!isEqual(oldProps.selectedChat, newProps.selectedChat)) {
+            this.messages = [];
+        }
+
         if (!isEqual(oldProps.messages, newProps.messages)) {
+            if (!Array.isArray(newProps.messages)) {
+                this.messages.unshift(newProps.messages);
+            } else {
+                newProps.messages?.forEach((message) => this.messages.push(message));
+            }
+
+            const elements = this.mapChatMessagesToComponent(this.messages);
+
             this.children.ListMessages.setProps({
-                elements: this.mapChatMessagesToComponent(
-                    [...oldProps.messages, ...newProps.messages],
-                ),
+                elements,
                 showEmpty: newProps.messages.length,
             });
         }

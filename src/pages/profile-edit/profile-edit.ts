@@ -28,7 +28,7 @@ class ProfileEditPage extends Block<Props> {
                     'form-modal__change-user-avatar',
                 ) as HTMLFormElement;
                 const formData = new FormData(formModal);
-                const { avatar } = await changeAvatar(formData);
+                const { avatar } = await changeAvatar(formData) as { avatar: string };
                 this.children.PhotoBlock.setProps({
                     avatar,
                 });

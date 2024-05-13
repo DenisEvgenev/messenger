@@ -3,19 +3,35 @@ import { CreateUser, LoginRequestData } from 'api/types';
 
 const authApi = new AuthApi();
 
-export const login = async (model: LoginRequestData) => {
+const handleSubmit = async (
+    request: () => Promise<object | void>,
+    errorMessage = 'Неизвестная ошибка, попробуйте позже',
+) => {
     window.store.set({ isLoading: true });
     try {
-        await authApi.login(model);
-        window.router.go('/messenger');
+        return await request();
     } catch (error) {
-        window.store.set({ popupErrorText: 'Неправильный логин или пароль' });
+        try {
+            const { reason } = JSON.parse(error);
+            window.store.set({ popupErrorText: reason });
+        } catch (parseError) {
+            window.store.set({
+                popupErrorText: errorMessage,
+            });
+        }
         setTimeout(() => {
             window.store.set({ popupErrorText: '' });
         }, 2000);
+        return { isError: true };
     } finally {
         window.store.set({ isLoading: false });
     }
+};
+
+export const login = async (model: LoginRequestData) => {
+    const makeRequest = () => authApi.login(model);
+    handleSubmit(makeRequest);
+    window.router.go('/messenger');
 };
 
 export const me = async (): Promise<object | void> => {
@@ -35,33 +51,13 @@ export const me = async (): Promise<object | void> => {
 };
 
 export const registration = async (model: CreateUser) => {
-    window.store.set({ isLoading: true });
-    try {
-        await authApi.registration(model);
-        window.router.go('/');
-    } catch (error) {
-        const { reason } = JSON.parse(error);
-        window.store.set({ popupErrorText: reason });
-        setTimeout(() => {
-            window.store.set({ popupErrorText: '' });
-        }, 2000);
-    } finally {
-        window.store.set({ isLoading: false });
-    }
+    const makeRequest = () => authApi.registration(model);
+    handleSubmit(makeRequest);
+    window.router.go('/');
 };
 
 export const logout = async () => {
-    window.store.set({ isLoading: true });
-    try {
-        await authApi.logout();
-        window.router.go('/');
-    } catch (error) {
-        const { reason } = JSON.parse(error);
-        window.store.set({ popupErrorText: reason });
-        setTimeout(() => {
-            window.store.set({ popupErrorText: '' });
-        }, 2000);
-    } finally {
-        window.store.set({ isLoading: false });
-    }
+    const makeRequest = () => authApi.logout();
+    handleSubmit(makeRequest);
+    window.router.go('/');
 };

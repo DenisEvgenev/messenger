@@ -64,9 +64,12 @@ class LeftPanelChat extends Block<Props> {
                 });
 
                 if (this.props.chatTitleField) {
-                    await createChat({ title: this.props.chatTitleField });
-                    getChats();
-                    this.children.AddingChatBlock.setProps({ showModal: false });
+                    const createChatResult = await createChat({ title: this.props.chatTitleField });
+
+                    if (createChatResult) {
+                        await getChats();
+                        this.children.AddingChatBlock.setProps({ showModal: false });
+                    }
                 }
             },
         });
@@ -112,7 +115,9 @@ class LeftPanelChat extends Block<Props> {
                 {{{ ButtonProfile }}}
                 {{{ ButtonAddingChat }}}
                 {{{ AddingChatBlock }}}
-                {{{ ListChats }}}
+                <div class="left-panel-chat__list">
+                    {{{ ListChats }}}
+                </div>
             </div>
         `);
     }

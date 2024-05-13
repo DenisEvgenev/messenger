@@ -5,7 +5,7 @@ const chatsApi = new HTTPTransport('/chats');
 
 export default class ChatsApi {
     async getChats(): Promise<XMLHttpRequest> {
-        return chatsApi.get('');
+        return chatsApi.get('', { data: { limit: 100 } });
     }
 
     async createChat(data: CreateChat): Promise<XMLHttpRequest> {

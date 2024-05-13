@@ -1,4 +1,3 @@
-import { Messages } from 'api/types';
 import { getToken } from 'services/chats';
 
 let currentSocket: WebSocket | null;
@@ -26,7 +25,7 @@ export const getOldMessages = (count: string) => {
 };
 
 export const createWebSocket = async (chatid: number, userId: number) => {
-    const { token } = await getToken(chatid);
+    const { token } = await getToken(chatid) as { token: string };
     const socket = new WebSocket(
         `wss://ya-praktikum.tech/ws/chats/${userId}/${chatid}/${token}`,
     );
@@ -40,18 +39,22 @@ export const createWebSocket = async (chatid: number, userId: number) => {
     });
 
     socket.addEventListener('message', (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'user connected') {
-            return;
-        }
-        if (Array.isArray(data)) {
-            window.store.set({ messages: data });
-            if (data.length === 20) {
-                getOldMessages(data[data.length - 1].id);
+        try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'user connected') {
+                return;
             }
-        } else {
-            const state = window.store.getState() as { messages: Messages };
-            window.store.set({ messages: [data, ...state.messages] });
+            if (Array.isArray(data)) {
+                window.store.set({ messages: data });
+                if (data.length === 20) {
+                    getOldMessages(data[data.length - 1].id);
+                }
+            } else {
+                window.store.set({ messages: data });
+            }
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Ошибка разбора JSON:', error);
         }
     });
 
