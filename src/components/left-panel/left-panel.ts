@@ -3,7 +3,7 @@ import Block from 'core/Block';
 import LeftArrowIcon from 'assets/arrow-left.svg';
 
 type Props = {
-    page: string;
+    onClick: string;
 }
 
 export default class LeftPanel extends Block<Props> {
@@ -19,7 +19,7 @@ export default class LeftPanel extends Block<Props> {
     render() {
         return (
             `
-            <div class="left-panel" page="{{page}}">
+            <div class="left-panel" onclick={{onClick}}>
                 {{{ IconBlock }}}
             </div>
             `

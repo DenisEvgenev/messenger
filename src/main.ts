@@ -1,46 +1,43 @@
 import * as Handlebars from 'handlebars';
+import Router from 'core/Router';
+import Store from 'core/Store';
+import middlewares from 'utils/middlewares';
 import * as Components from './components';
 import * as Pages from './pages';
 
-const pages: Record<string, any> = {
-    login: [Pages.LoginPage],
-    'sign-in': [Pages.SignInPage],
-    chat: [Pages.ChatPage],
-    404: [Pages.ClientErrorPage],
-    500: [Pages.ServerErrorPage],
-    profile: [Pages.ProfilePage],
-    'profile-edit': [Pages.ProfileEditPage],
-    'profile-password': [Pages.ProfilePasswordPage],
-};
+const router = new Router('#app');
+declare global {
+    interface Window {
+      router: Router;
+      store: Store;
+    }
+  }
+
+window.router = router;
+
+const store = new Store({
+    isLoading: false,
+    loginError: null,
+    messages: [],
+    chats: [],
+    userData: {},
+    selectedCard: null,
+});
+
+window.store = store;
 
 Object.entries(Components).forEach(([name, component]) => {
-    const template = component as unknown as Handlebars.Template<any>;
+    const template = component as unknown as Handlebars.Template<unknown>;
     Handlebars.registerPartial(name, template);
 });
 
-export function navigate(page: string) {
-    const [Source, context] = pages[page];
-    const container = document.getElementById('app')!;
-
-    if (Source instanceof Object) {
-        const pageSource = new Source(context);
-        container.innerHTML = '';
-        container.append(pageSource.getContent());
-        return;
-    }
-
-    container.innerHTML = Handlebars.compile(Source)(context);
-}
-
-document.addEventListener('DOMContentLoaded', () => navigate('login'));
-
-document.addEventListener('click', (e) => {
-    if (e.target && e.target instanceof HTMLElement) {
-        const page = e.target.getAttribute('page');
-        if (page) {
-            navigate(page);
-            e.preventDefault();
-            e.stopImmediatePropagation();
-        }
-    }
-});
+router
+    .use('/', Pages.LoginPage, middlewares)
+    .use('/sign-up', Pages.SignInPage, middlewares)
+    .use('/settings', Pages.ProfilePage, middlewares)
+    .use('/profile-edit', Pages.ProfileEditPage, middlewares)
+    .use('/profile-password', Pages.ProfilePasswordPage, middlewares)
+    .use('/messenger', Pages.ChatPage, middlewares)
+    .use('*', Pages.ClientErrorPage, {})
+    .use('/500', Pages.ServerErrorPage, {})
+    .start();

@@ -1,4 +1,10 @@
 import Block from 'core/Block';
+import { createWebSocket } from 'core/WSTransport';
+import { connect } from 'utils/connect';
+import isEqual from 'utils/isEqual';
+import { SelectedChat } from 'services/setActiveCard';
+import { UserDTO, Messages } from 'api/types';
+import { ListElements } from 'components/list-elements';
 import { Message } from './message';
 
 type Props = {
@@ -9,45 +15,84 @@ type Props = {
     time: string;
     countUnreadedMessages: number;
     messagesComponentsKeys?: Array<string>;
+    selectedChat?: SelectedChat;
+    userData?: UserDTO;
+    messages: Messages;
+    chatActive?: boolean;
+    messageCount?: string;
 }
 
-export default class MainPanelChatMiddle extends Block<Props> {
-    constructor(props: Props) {
-        const messages = [
-            { text: 'Круто!', isHost: true, time: '12:00' },
+class MainPanelChatMiddle extends Block<Props> {
+    private messages: Messages = [];
+
+    mapChatMessagesToComponent(messages: Messages) {
+        return messages?.map(({ content, time, user_id: userId }) =>
+            new Message({
+                content,
+                isYourLastMessage: this.props.userData?.id === userId,
+                time: `${new Date(time).getHours().toString().padStart(2, '0')}:`
+                + `${new Date(time).getMinutes().toString().padStart(2, '0')}`,
+            })).reverse();
+    }
+
+    init() {
+        const ListMessages = new ListElements(
             {
-                text: 'Привет! Смотри, тут всплыл интересный кусок лунной космической истории — '
-                + 'НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для '
-                + 'полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 '
-                + 'EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности '
-                + 'Луны, так как астронавты с собой забрали только кассеты с пленкой!',
-                isHost: false,
-                time: '12:00',
+                elements: this.mapChatMessagesToComponent(this.props.messages) || [],
+                className: 'main-panel-chat-middle__empty',
             },
-        ];
+        );
 
-        const messagesComponents = messages.reduce((acc: Record<string, any>, data) => {
-            const component = new Message(data);
-            const { id } = component;
+        this.children = {
+            ...this.children,
+            ListMessages,
+        };
+    }
 
-            acc[id] = component;
-            return acc;
-        }, {});
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
+        if (isEqual(oldProps, newProps)) {
+            return false;
+        }
 
-        super({
-            ...props,
-            messagesComponentsKeys: Object.keys(messagesComponents),
-            ...messagesComponents,
-        });
+        if (!isEqual(oldProps.selectedChat, newProps.selectedChat)) {
+            this.messages = [];
+        }
+
+        if (!isEqual(oldProps.messages, newProps.messages)) {
+            if (!Array.isArray(newProps.messages)) {
+                this.messages.unshift(newProps.messages);
+            } else {
+                newProps.messages?.forEach((message) => this.messages.push(message));
+            }
+
+            const elements = this.mapChatMessagesToComponent(this.messages);
+
+            this.children.ListMessages.setProps({
+                elements,
+                showEmpty: newProps.messages.length,
+            });
+        }
+
+        if (newProps.selectedChat && oldProps.selectedChat !== newProps.selectedChat
+            && newProps.userData && !newProps.chatActive) {
+            createWebSocket(newProps.selectedChat.id, newProps.userData.id);
+        }
+        return true;
     }
 
     render(): string {
         return (`
-            <div class="main-panel-chat-middle">
-                ${this.props.messagesComponentsKeys?.map(
-                (key: string) => `{{{ ${key} }}}`,
-            ).join('')}
+            <div id="messages" class="main-panel-chat-middle">
+                {{{ ListMessages }}}
             </div>
         `);
     }
 }
+
+const mapStateToProps = ({
+    selectedChat, userData, chatActive, messages,
+}: Props) =>
+    ({
+        selectedChat, userData, chatActive, messages,
+    });
+export default connect(mapStateToProps)(MainPanelChatMiddle);

@@ -1,9 +1,15 @@
 export { Button } from './button';
 export { FormAuth } from './form-auth';
 export { FormSignIn } from './form-sign-in';
+export { PopupError } from './popup-error';
 export { Chat } from './chat';
 export { FormProfile } from './form-profile';
+export { FormEdit } from './form-edit';
+export { FormEditPassword } from './form-edit-password';
+export { FormEditPhoto } from './form-edit-photo';
+export { FormModal } from './form-modal';
 export { FormGroup } from './form-group';
+export { ListElements } from './list-elements';
 export { FormWrapper } from './form-wrapper';
 export { Input } from './input';
 export { Title } from './title';

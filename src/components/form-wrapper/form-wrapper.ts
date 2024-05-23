@@ -4,7 +4,8 @@ type Props = {
     FormBody?: Block<object>;
     events?: {
         submit: (e: Event) => void;
-    }
+    },
+    onSubmit: (e: Event) => void
 }
 
 export default class FormWrapper extends Block<Props> {
@@ -12,10 +13,7 @@ export default class FormWrapper extends Block<Props> {
         super({
             ...props,
             events: {
-                submit: (e: Event) => {
-                    console.log('===== Параметры =====', { ...props.FormBody?.props });
-                    e.preventDefault();
-                },
+                submit: props.onSubmit,
             },
         });
     }

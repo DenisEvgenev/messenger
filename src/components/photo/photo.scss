@@ -1,6 +1,7 @@
 .image {
   width: 47px;
   height: 47px;
+  border-radius: 50%;
 
   &__main {
     width: 130px;
@@ -10,5 +11,13 @@
   &__top {
     width: 34px;
     height: 34px;
+  }
+
+  &__edit {
+    cursor: pointer;
+  }
+
+  &__edit:hover {
+    filter: brightness(50%);
   }
 }

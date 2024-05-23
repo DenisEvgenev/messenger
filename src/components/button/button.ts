@@ -2,10 +2,11 @@ import { Icon } from 'components/icon';
 import Block from 'core/Block';
 
 export type ButtonProps = {
+    className?: string;
     label: string;
     page?: string;
     type: string;
-    disabled?: boolean;
+    onClick?: () => void;
     events?: {
         click: () => void;
     }
@@ -13,6 +14,24 @@ export type ButtonProps = {
 }
 
 export default class Button extends Block<ButtonProps> {
+    constructor(props: ButtonProps) {
+        if (props.page && !props.onClick) {
+            const { page } = props;
+            props.events = {
+                click: () => window.router.go(page),
+            };
+        }
+
+        if (props.onClick) {
+            props.events = {
+                click: props.onClick,
+            };
+        }
+        super({
+            ...props,
+        });
+    }
+
     init() {
         if (this.props.icon) {
             const IconButton = new Icon({
@@ -31,8 +50,7 @@ export default class Button extends Block<ButtonProps> {
         return `
             <button 
                 type={{type}}        
-                class="button button__{{type}} button__{{classname}} {{arrow}}"
-                {{#unless disabled}}page="{{page}}"{{/unless}}
+                class="button button__{{type}} button__{{className}} {{arrow}}"
             >
                 {{#if icon}}{{{IconButton}}}{{/if}}
                 {{label}}

@@ -1,44 +1,115 @@
 import {
-    Button, FormProfile, LeftPanel, Photo,
+    FormEdit, FormModal, LeftPanel, Photo, PopupError,
 } from 'components';
 import Block from 'core/Block';
-import emptyPhoto from 'assets/empty.png';
+import { connect } from 'utils/connect';
+import { changeAvatar, changeProfile } from 'services/user';
+import { UserDTO } from 'api/types';
 
-export default class ProfileEditPage extends Block<object> {
-    constructor(props: object) {
-        const formGroups = [{
-            type: 'name', label: 'Почта', text: 'pochta@yandex.ru', name: 'email',
-        }, {
-            name: 'login', type: 'name', label: 'Логин', text: 'ivanivanov',
-        }, {
-            name: 'first_name', type: 'name', label: 'Имя', text: 'Иван',
-        }, {
-            name: 'second_name', type: 'name', label: 'Фамилия', text: 'Иванов',
-        }, {
-            name: 'display_name', type: 'name', label: 'Имя в чате', text: 'Иван',
-        }, {
-            name: 'phone', type: 'name', label: 'Телефон', text: '+7 (909) 967 30 30',
-        }];
+type Props = {
+    userData?: UserDTO;
+    firstNameField: string
+    secondNameField: string;
+    displayNameField: string;
+    loginField: string;
+    emailField: string;
+    phoneField: string;
+    avatar: string;
+}
 
-        super({
-            ...props,
-            FormProfileGroups: new FormProfile({ formGroups }),
-            Photo: new Photo({ avatar: emptyPhoto }),
-            LeftPanel: new LeftPanel({ page: 'chat' }),
-            ButtonSave: new Button({ label: 'Сохранить', type: 'primary', page: 'profile' }),
+class ProfileEditPage extends Block<Props> {
+    init() {
+        const EditPhotoBlock = new FormModal({
+            id: 'change-user-avatar',
+            formBody: 'Картинка: <input id="avatar" type="file" name="avatar" accept="image/*">',
+            onSubmit: async (e: Event) => {
+                e.preventDefault();
+                const formModal = document.getElementById(
+                    'form-modal__change-user-avatar',
+                ) as HTMLFormElement;
+                const formData = new FormData(formModal);
+                const { avatar } = await changeAvatar(formData) as { avatar: string };
+                this.children.PhotoBlock.setProps({
+                    avatar,
+                });
+                EditPhotoBlock.setProps({ showModal: false });
+            },
         });
+
+        const LeftPanelBlock = new LeftPanel({ onClick: "window.router.go('/settings')" });
+        const FormEditBlock = new FormEdit({
+            onSubmit: (e: Event) => {
+                e.preventDefault();
+                changeProfile({
+                    first_name: this.props.firstNameField,
+                    second_name: this.props.secondNameField,
+                    display_name: this.props.displayNameField,
+                    login: this.props.loginField,
+                    email: this.props.emailField,
+                    phone: this.props.phoneField,
+                });
+            },
+        });
+
+        const PhotoBlock = new Photo({
+            avatar: this.props.avatar,
+            type: 'main',
+            className: 'edit',
+            events: {
+                click: () => EditPhotoBlock.setProps({ showModal: true }),
+            },
+        });
+        const PopupErrorBlock = new PopupError({});
+
+        this.children = {
+            ...this.children,
+            FormEditBlock,
+            PhotoBlock,
+            LeftPanelBlock,
+            PopupErrorBlock,
+            EditPhotoBlock,
+        };
+    }
+
+    componentDidUpdate(oldProps: Props, newProps: Props): boolean | { [x: string]: unknown; } {
+        if (oldProps === newProps) {
+            return false;
+        }
+
+        this.children.PhotoBlock.setProps({ avatar: newProps.avatar });
+        return true;
     }
 
     render() {
         return `
-            <div class="container">
-                {{{ Photo }}}
-                {{{ FormProfileGroups }}}
-                <div class="button-container">
-                    {{{ ButtonSave }}}
+            <div>
+                {{{ PopupErrorBlock }}}
+                <div class="container">
+                    {{{ EditPhotoBlock }}}
+                    {{{ PhotoBlock }}}
+                    {{{ FormEditBlock }}}
+                    {{{ LeftPanelBlock }}}
                 </div>
-                {{{ LeftPanel }}}
             </div>
         `;
     }
 }
+
+const mapStateToProps = ({
+    userData,
+    firstNameField,
+    secondNameField,
+    displayNameField,
+    loginField,
+    emailField,
+    phoneField,
+}: Props) => ({
+    avatar: userData?.avatar,
+    firstNameField: firstNameField ?? userData?.first_name,
+    secondNameField: secondNameField ?? userData?.second_name,
+    displayNameField: displayNameField ?? userData?.display_name,
+    loginField: loginField ?? userData?.login,
+    emailField: emailField ?? userData?.email,
+    phoneField: phoneField ?? userData?.phone,
+});
+export default connect(mapStateToProps)(ProfileEditPage);

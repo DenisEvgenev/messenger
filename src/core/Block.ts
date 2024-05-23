@@ -36,7 +36,6 @@ export default class Block<Props extends object> {
 
     private addEvents() {
         const { events = {} } = this.props as { events?: { [key: string]: EventListener } };
-
         Object.keys(events).forEach((eventName) => {
             const eventListener = events[eventName];
             if (this._element !== null) {
@@ -103,7 +102,7 @@ export default class Block<Props extends object> {
         this._render();
     }
 
-    componentDidUpdate(oldProps: Props, newProps: Props): { [x: string]: any; } | boolean {
+    componentDidUpdate(oldProps: Props, newProps: Props): unknown | boolean {
         return { ...oldProps, ...newProps };
     }
 
@@ -136,13 +135,34 @@ export default class Block<Props extends object> {
         return this._element;
     }
 
+    private _componentWillUnmount() {
+        this.componentWillUnmount();
+    }
+
+    componentWillUnmount() {
+        this.removeEvents();
+    }
+
     _render() {
         this.removeEvents();
 
-        const propsAndStubs = { ...this.props };
+        const propsAndStubs = { ...this.props } as { [key: string]: unknown };
 
         Object.entries(this.children).forEach(([key, child]) => {
             (propsAndStubs as Record<string, unknown>)[key] = `<div data-id="${child.id}"></div>`;
+        });
+        const childrenProps: Array<Block<object>> = [];
+        Object.entries(propsAndStubs).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                propsAndStubs[key] = value.map((item) => {
+                    if (item instanceof Block) {
+                        childrenProps.push(item);
+                        return `<div data-id="${item.id}"></div>`;
+                    }
+
+                    return item;
+                }).join('');
+            }
         });
 
         const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
@@ -150,7 +170,7 @@ export default class Block<Props extends object> {
         fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs);
         const newElement = fragment.content.firstElementChild as HTMLElement;
 
-        Object.values(this.children).forEach((child) => {
+        [...Object.values(this.children), ...childrenProps].forEach((child) => {
             const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
 
             const content = child.getContent();
@@ -207,11 +227,8 @@ export default class Block<Props extends object> {
         return document.createElement(tagName);
     }
 
-    show() {
-        this.getContent()!.style.display = 'block';
-    }
-
-    hide() {
-        this.getContent()!.style.display = 'none';
+    remove() {
+        this._componentWillUnmount();
+        this.getContent()?.remove();
     }
 }

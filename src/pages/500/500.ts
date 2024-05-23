@@ -7,7 +7,11 @@ export default class ServerErrorPage extends Block<object> {
             ...props,
             TitleMain: new Title({ title: '500', type: 'main' }),
             Text: new Title({ title: 'Мы уже фиксим' }),
-            ButtonChat: new Button({ type: 'link', page: 'chat', label: 'Назад к чатам' }),
+            ButtonChat: new Button({
+                type: 'link',
+                page: '/messenger',
+                label: 'Назад к чатам',
+            }),
         });
     }
 

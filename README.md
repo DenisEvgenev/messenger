@@ -1,4 +1,4 @@
-# Веб-приложение Messenger v1.2
+# Веб-приложение Messenger v1.3
 
 ## О чем приложение?
 Веб-приложение Messenger - это интуитивно понятный мессенджер, который обеспечивает мгновенное общение и обмен сообщениями между пользователями. С моим приложением вы сможете легко подключиться с друзьями, семьей или коллегами, в любой точке мира. С Messenger вы всегда будете в курсе последних обновлений успешно доставленных сообщений и сможете наслаждаться отличной производительностью и безопасностью ваших личных данных. Общайтесь где угодно и когда угодно с помощью Messenger!
@@ -9,6 +9,7 @@
 ## Ход разработки
 Sprint 1: https://github.com/DenisEvgenev/messenger/tree/sprint_1
 Sprint 2: https://github.com/DenisEvgenev/messenger/tree/sprint_2
+Sprint 3: https://github.com/DenisEvgenev/messenger/tree/sprint_3
 
 ## Используемые технологии
 Handlebars, SCSS, Typescript
@@ -30,4 +31,4 @@ Handlebars, SCSS, Typescript
 
 ## Входная точка
 Если запустили локально: http://localhost:3000/
-Netlify ссылка с деплоем: https://dreamy-vacherin-aceb03.netlify.app/
+Netlify ссылка с деплоем: https://deploy-preview-3--dreamy-vacherin-aceb03.netlify.app

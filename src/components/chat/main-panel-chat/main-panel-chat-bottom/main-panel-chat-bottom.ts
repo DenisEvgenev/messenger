@@ -4,6 +4,7 @@ import FileIcon from 'assets/file.svg';
 import ArrowRightIcon from 'assets/arrow-right.svg';
 import { Input } from 'components/input';
 import { Button } from 'components/button';
+import { sendMessage } from 'core/WSTransport';
 
 type Props = {
     userName?: string;
@@ -13,9 +14,23 @@ type Props = {
     time?: string;
     countUnreadedMessages?: number;
     message?: string;
+    events?: {
+        submit: (event: Event) => void;
+    }
 }
 
 export default class MainPanelChatBottom extends Block<Props> {
+    constructor(props: Props) {
+        super({
+            ...props,
+            events: {
+                submit: (event) => {
+                    event.preventDefault();
+                },
+            },
+        });
+    }
+
     init() {
         const onSendMessageBind = this.onSendMessage.bind(this);
         const onChangeMessageBind = this.onChangeMessage.bind(this);
@@ -32,8 +47,9 @@ export default class MainPanelChatBottom extends Block<Props> {
             onBlur: onChangeMessageBind,
         });
         const SendMessage = new Button({
-            type: 'invisible',
+            type: 'submit',
             label: '',
+            className: 'send-message',
             events: {
                 click: onSendMessageBind,
             },
@@ -53,29 +69,30 @@ export default class MainPanelChatBottom extends Block<Props> {
         const target = event.target as HTMLInputElement;
         const inputValue = target.value;
 
-        if (target.value) {
-            this.children.Message.setProps({ error: false, errorText: null });
-        } else {
-            this.children.Message.setProps({
-                error: true,
-                errorText: 'Сообщение не должно быть пустым',
-            });
-        }
-
         this.setProps({ message: inputValue });
     }
 
     onSendMessage() {
-        console.log('===== message ====', this.props.message);
+        const focusableElement = document.querySelector(
+            '.input__element[name="message"]',
+        ) as HTMLInputElement;
+
+        focusableElement.blur();
+        if (this.props.message) {
+            focusableElement.value = '';
+
+            sendMessage(this.props.message);
+            this.children.Message.setProps({ text: '' });
+        }
+        focusableElement.focus();
     }
 
     render(): string {
         return (`
-            <div class="main-panel-chat-bottom">
-                <div class="main-panel-chat-bottom__file">{{{ File }}}</div>
+            <form class="main-panel-chat-bottom">
                 <div class="main-panel-chat-bottom__message">{{{ Message }}}</div>
                 <div class="main-panel-chat-bottom__send-message">{{{ SendMessage }}}</div>
-            </div>
+            </form>
         `);
     }
 }

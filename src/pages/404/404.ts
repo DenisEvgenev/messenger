@@ -7,7 +7,11 @@ export default class ClientErrorPage extends Block<object> {
             ...props,
             TitleMain: new Title({ title: '404', type: 'main' }),
             Text: new Title({ title: 'Не туда попали' }),
-            ButtonChat: new Button({ type: 'link', page: 'chat', label: 'Назад к чатам' }),
+            ButtonChat: new Button({
+                type: 'link',
+                label: 'Назад к чатам',
+                page: '/messenger',
+            }),
         });
     }
 

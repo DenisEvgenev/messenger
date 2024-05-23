@@ -2,7 +2,9 @@ export const EVENTS = {
     INIT: 'init',
     FLOW_CDM: 'flow:component-did-mount',
     FLOW_CDU: 'flow:component-did-update',
+    FLOW_CWU: 'flow:component-will-unmount',
     FLOW_RENDER: 'flow:render',
+    UPDATED: 'updated',
 } as const;
 
 type Keys = keyof typeof EVENTS;
@@ -26,7 +28,7 @@ export default class EventBus<E extends Values> {
         this.listeners[event] = eventListeners.filter((listener) => listener !== callback);
     }
 
-    emit<F extends(...args: any) => void>(event: E, ...args: Parameters<F>): void {
+    emit<F extends(...args: unknown[]) => void>(event: E, ...args: Parameters<F>): void {
         const eventListeners = this.listeners[event];
         if (!eventListeners) {
             return;

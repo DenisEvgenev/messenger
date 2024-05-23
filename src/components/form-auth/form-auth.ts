@@ -1,10 +1,11 @@
 import { Input, Button, Title } from 'components';
 import { REGEXP_LOGIN, REGEXP_PASSWORD } from 'constants/constants';
 import Block from 'core/Block';
+import { fillLogin, fillPassword } from 'services/setAutorizationFields';
 
 type Props = {
-    login?: string;
-    password?: string;
+    loginField: string;
+    passwordField: string;
 }
 
 class FormAuth extends Block<Props> {
@@ -23,19 +24,16 @@ class FormAuth extends Block<Props> {
             label: 'Пароль',
             onBlur: onChangePasswordBind,
         });
+
         const ButtonLogin = new Button({
             label: 'Авторизироваться',
             type: 'submit',
-            disabled: true,
-            events: {
-                click: onLoginBind || (() => {}),
-            },
-            page: 'chat',
+            onClick: onLoginBind,
         });
         const ButtonCreateAccount = new Button({
             label: 'Нет аккаунта?',
             type: 'link',
-            page: 'sign-in',
+            page: '/sign-up',
         });
 
         this.children = {
@@ -61,7 +59,7 @@ class FormAuth extends Block<Props> {
             });
         }
 
-        this.setProps({ login: inputValue });
+        fillLogin(inputValue);
     }
 
     onChangePassword(event: Event) {
@@ -78,13 +76,13 @@ class FormAuth extends Block<Props> {
             });
         }
 
-        this.setProps({ password: inputValue });
+        fillPassword(inputValue);
     }
 
     onLogin() {
-        const { login = '', password = '' } = this.props;
-        const isCorrectLogin = REGEXP_LOGIN.test(login);
-        const isCorrectPassword = REGEXP_PASSWORD.test(password);
+        const { loginField, passwordField } = this.props;
+        const isCorrectLogin = REGEXP_LOGIN.test(loginField);
+        const isCorrectPassword = REGEXP_PASSWORD.test(passwordField);
 
         if (!isCorrectPassword) {
             this.children.FormPassword.setProps({
@@ -99,18 +97,7 @@ class FormAuth extends Block<Props> {
                 error: true,
                 errorText: 'Используйте только буквы, начиная с заглавной',
             });
-        } else {
-            this.children.InputLogin.setProps({ error: false, errorText: null });
         }
-
-        if (isCorrectLogin && isCorrectPassword) {
-            this.children.ButtonLogin.setProps({ disabled: false });
-        } else {
-            this.children.ButtonLogin.setProps({ disabled: true });
-        }
-        console.log('===== Параметры =====', {
-            ...this.props,
-        });
     }
 
     render() {
