@@ -4,7 +4,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "chai-friendly"],
   "rules": {
     "max-len": [2, 100],
     "@typescript-eslint/no-unused-vars": 2,
@@ -28,9 +28,14 @@
     "no-use-before-define": "off",
     "no-param-reassign": ["error", { "props": false }],
     "no-shadow": ["error", { "allow": ["METHODS"] }],
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-unused-expressions": "off",
+    "chai-friendly/no-unused-expressions": "error"
   },
   "settings": {
+    "react": {
+      "version": "999.999.999"
+    },
     "import/resolver": {
       "node": {
         "paths": ["src"],

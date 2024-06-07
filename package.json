@@ -12,24 +12,57 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "start": "npm run build && node server.js",
-    "lint:scss": "stylelint '**/*.scss' --fix",
-    "lint": "eslint 'src/**/*.{ts,tsx}' && tsc --noEmit"
+    "lint:scss": "stylelint '**/*.scss'",
+    "lint:scss-fix": "stylelint '**/*.scss' --fix",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "test": "mocha",
+    "prepare": "husky install",
+    "lintStaged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts, tsx}": [
+      "npm run test",
+      "npx prettier --write",
+      "npx eslint --fix",
+      "npm run lint"
+    ],
+    "*.{scss}": [
+      "npm run lint:scss-fix"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "devDependencies": {
+    "@types/chai": "^4.3.16",
     "@types/handlebars": "^4.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/sinon": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
+    "chai": "^5.1.1",
     "eslint": "^8.49.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-chai-friendly": "^0.7.4",
     "express": "^4.18.2",
+    "husky": "8.0.0",
+    "mocha": "^10.4.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "3.0.3",
+    "sinon": "^18.0.0",
     "stylelint": "^15.10.3",
     "stylelint-config-standard-scss": "^11.0.0",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "vite": "^4.4.5",
+    "xmlhttprequest": "^1.8.0"
   },
   "dependencies": {
     "handlebars": "^4.7.8",
+    "jsdom": "^24.0.0",
+    "lint-staged": "^15.2.5",
     "nanoid": "^5.0.7",
     "sass": "^1.66.1",
     "vite-plugin-checker": "^0.6.2"

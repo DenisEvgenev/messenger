@@ -2,7 +2,7 @@ import Block from './Block';
 import Route, { Middlewares } from './Route';
 
 class Router {
-    private static instance: Router;
+    private static instance: Router | null = null;
 
     private currentRoute: Route | null;
 
@@ -32,9 +32,17 @@ class Router {
         return Router.instance;
     }
 
-    use(pathname: string, block: new (...args: unknown[]) =>
-        Block<object>, middlewares: Middlewares) {
-        const route = new Route(pathname, block, { rootQuery: this.rootQuery }, middlewares);
+    use(
+        pathname: string,
+        block: new (...args: unknown[]) => Block<object>,
+        middlewares: Middlewares,
+    ) {
+        const route = new Route(
+            pathname,
+            block,
+            { rootQuery: this.rootQuery },
+            middlewares,
+        );
         this.routes.push(route);
         return this;
     }
@@ -63,6 +71,10 @@ class Router {
         this.currentRoute = route;
 
         route.render();
+    }
+
+    public static clearInstance(): void {
+        Router.instance = null;
     }
 
     go(pathname: string) {
