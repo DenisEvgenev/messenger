@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import EventBus, { Values, EVENTS } from './EventBus';
 
 export type Children = {
-    [key: string]: Block<object>;
+  [key: string]: Block<object>;
 };
 
 export default class Block<Props extends object> {
@@ -11,7 +11,7 @@ export default class Block<Props extends object> {
 
     private _meta: { tagName: string };
 
-    private eventListeners: { [key: string]: EventListener};
+    private eventListeners: { [key: string]: EventListener };
 
     public id: string;
 
@@ -26,7 +26,7 @@ export default class Block<Props extends object> {
 
         const { props, children } = this._getChildrenAndProps(propsWithChildren);
 
-        this.props = this._makePropsProxy(props || {} as Props);
+        this.props = this._makePropsProxy(props || ({} as Props));
         this.children = children || {};
 
         this.eventbus = new EventBus();
@@ -35,13 +35,15 @@ export default class Block<Props extends object> {
     }
 
     private addEvents() {
-        const { events = {} } = this.props as { events?: { [key: string]: EventListener } };
+        const { events = {} } = this.props as {
+      events?: { [key: string]: EventListener };
+    };
         Object.keys(events).forEach((eventName) => {
             const eventListener = events[eventName];
             if (this._element !== null) {
                 this._element.addEventListener(
-                    eventName as string,
-                    events[eventName] as EventListener,
+          eventName as string,
+          events[eventName] as EventListener,
                 );
                 this.eventListeners[eventName] = eventListener;
             }
@@ -51,13 +53,18 @@ export default class Block<Props extends object> {
     private removeEvents() {
         if (this._element !== null) {
             Object.keys(this.eventListeners).forEach((eventName) => {
-                this._element?.removeEventListener(eventName, this.eventListeners[eventName]);
+                this._element?.removeEventListener(
+                    eventName,
+                    this.eventListeners[eventName],
+                );
             });
         }
         this.eventListeners = {};
     }
 
-    private registerEvents(eventBus: { on: (arg0: string, arg1: unknown) => void; }) {
+    private registerEvents(eventBus: {
+    on: (arg0: string, arg1: unknown) => void;
+  }) {
         eventBus.on(EVENTS.INIT, this._init.bind(this));
         eventBus.on(EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
         eventBus.on(EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
@@ -75,8 +82,7 @@ export default class Block<Props extends object> {
         this.eventbus.emit(EVENTS.FLOW_RENDER);
     }
 
-    init() {
-    }
+    init() {}
 
     _componentDidMount() {
         this.componentDidMount();
@@ -89,8 +95,6 @@ export default class Block<Props extends object> {
 
     dispatchComponentDidMount() {
         this.eventbus.emit(EVENTS.FLOW_CDM);
-
-        // Object.values(this.children).forEach((child) => child.dispatchComponentDidMount());
     }
 
     private _componentDidUpdate(oldProps: Props, newProps: Props) {
@@ -106,9 +110,10 @@ export default class Block<Props extends object> {
         return { ...oldProps, ...newProps };
     }
 
-    private _getChildrenAndProps(
-        propsAndChildren: Props,
-    ): { props: Props; children: Children } {
+    private _getChildrenAndProps(propsAndChildren: Props): {
+    props: Props;
+    children: Children;
+  } {
         const children = {} as Children;
         const props = {} as Props;
 
@@ -149,23 +154,29 @@ export default class Block<Props extends object> {
         const propsAndStubs = { ...this.props } as { [key: string]: unknown };
 
         Object.entries(this.children).forEach(([key, child]) => {
-            (propsAndStubs as Record<string, unknown>)[key] = `<div data-id="${child.id}"></div>`;
+            (propsAndStubs as Record<string, unknown>)[
+                key
+            ] = `<div data-id="${child.id}"></div>`;
         });
         const childrenProps: Array<Block<object>> = [];
         Object.entries(propsAndStubs).forEach(([key, value]) => {
             if (Array.isArray(value)) {
-                propsAndStubs[key] = value.map((item) => {
-                    if (item instanceof Block) {
-                        childrenProps.push(item);
-                        return `<div data-id="${item.id}"></div>`;
-                    }
+                propsAndStubs[key] = value
+                    .map((item) => {
+                        if (item instanceof Block) {
+                            childrenProps.push(item);
+                            return `<div data-id="${item.id}"></div>`;
+                        }
 
-                    return item;
-                }).join('');
+                        return item;
+                    })
+                    .join('');
             }
         });
 
-        const fragment = this._createDocumentElement('template') as HTMLTemplateElement;
+        const fragment = this._createDocumentElement(
+            'template',
+        ) as HTMLTemplateElement;
 
         fragment.innerHTML = Handlebars.compile(this.render())(propsAndStubs);
         const newElement = fragment.content.firstElementChild as HTMLElement;

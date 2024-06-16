@@ -3,20 +3,37 @@
     "outDir": "dist",
     "lib": ["DOM", "ESNext"],
     "declaration": false,
-    "module": "commonjs",
+    "module": "ESNext",
     "strictNullChecks": true,
     "sourceMap": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true,
-    "baseUrl": "src/",
+    "baseUrl": ".",
+    "moduleResolution": "node",
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "paths": {
+      "components": ["src/components"],
+      "components/*": ["src/components/*"],
+      "core/*": ["src/core/*"],
+      "assets/*": ["src/assets/*"],
+      "constants/*": ["src/constants/*"],
+      "utils/*": ["src/utils/*"],
+      "services/*": ["src/services/*"],
+      "api/*": ["src/api/*"]
+    }
   },
   "include": [
     "src",
-    "custom.d.ts"
-  ]
+    "custom.d.ts",
+    "mochaSetup.js"
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }
